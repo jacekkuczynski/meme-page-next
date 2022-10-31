@@ -1,6 +1,6 @@
 import Head from "next/head";
 import MemePost from "../components/MemePost/MemePost";
-import MemeStreamLayout from "../components/MemePost/MemeStreamLayout/MemeStreamLayout";
+import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 
 export default function Home() {
   return (
@@ -15,11 +15,34 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1>Welcome to Meme Page!</h1>
         <MemeStreamLayout>
-          <MemePost imageSrc={""} />
-          <MemePost imageSrc={""} />
-          <MemePost imageSrc={""} />
+          <MemePost
+            userAvatarSrc={"string"}
+            username={"string"}
+            imageTitle={"string"}
+            imageSrc={"string"}
+            upvoteCount={419}
+            downvoteCount={419}
+            commentCount={419}
+          />
+          <MemePost
+            userAvatarSrc={"string"}
+            username={"string"}
+            imageTitle={"string"}
+            imageSrc={"string"}
+            upvoteCount={419}
+            downvoteCount={419}
+            commentCount={419}
+          />
+          <MemePost
+            userAvatarSrc={"string"}
+            username={"string"}
+            imageTitle={"string"}
+            imageSrc={"string"}
+            upvoteCount={419}
+            downvoteCount={419}
+            commentCount={419}
+          />
         </MemeStreamLayout>
       </main>
     </>

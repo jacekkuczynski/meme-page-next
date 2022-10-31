@@ -4,6 +4,7 @@ import {
   ArrowDownIcon,
   ChatBubbleLeftIcon,
 } from "@heroicons/react/24/outline";
+import UserAvatar from "../UserAvatar/UserAvatar";
 
 type MemePostProps = {
   userAvatarSrc: string;
@@ -27,20 +28,17 @@ const MemePost = ({
   return (
     <div className="flex flex-col items-center gap-1 w-fit py-5 border-b-2">
       <div className="flex items-center gap-2 text-left w-full text-sm">
-        <div className="bg-slate-400 rounded-full">
+        <div className="bg-slate-300 rounded-full p-1">
           {/* avatar */}
-          <Image
-            src={"/avatarExample.png"}
-            alt="user avatar"
-            width={20}
-            height={20}
-          />
+          <UserAvatar avatarSrc={"/avatarExample.png"} />
         </div>
         {/* username */}
         <div>username</div>
       </div>
       {/* title */}
-      <h4 className="font-semibold text-left text-2xl w-full">Meme Title</h4>
+      <h4 className="font-semibold text-left text-2xl w-full hover:text-blue-500 cursor-pointer">
+        Meme Title
+      </h4>
       {/* meme */}
       <Image
         src={"/memeExample.webp"}
