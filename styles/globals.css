@@ -5,7 +5,9 @@
   .meme-control-button {
     @apply border flex items-center cursor-pointer gap-3 py-2 px-4 hover:bg-neutral-100 ease-in duration-100;
   }
+
   .dropdown-item {
     @apply p-2 hover:bg-neutral-50 text-lg font-medium;
   }
+
 }
