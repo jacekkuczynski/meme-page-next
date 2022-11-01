@@ -5,6 +5,32 @@ import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Profile from "../components/Profile/Profile";
 
 export default function Home() {
+  const handleTest = async () => {
+    const body = {
+      upVotes: 0,
+      downVotes: 0,
+      memeTitle: "siema",
+      fileURL: "siemaURL",
+    };
+
+    console.log("clicked");
+
+    try {
+      const response = await fetch("/api/createNewPost/createNewPost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (response.status !== 200) {
+        console.log("something went wrong...");
+      } else {
+        console.log("succes");
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -17,6 +43,8 @@ export default function Home() {
       </Head>
 
       <main>
+        <button onClick={handleTest}>Test Planetscale</button>
+
         <MemeStreamLayout>
           <Profile />
           <MemePost
