@@ -29,10 +29,12 @@ const Navbar = () => {
             <UserAvatarDropdown />
           </div>
         </div>
-        <button className="hidden sm:flex items-center gap-3 bg-blue-700 rounded-full py-1 px-4 font-semibold">
-          <PencilIcon className="h-4 w-4" />
-          Post
-        </button>
+        <Link href="/upload">
+          <button className="hidden sm:flex items-center gap-3 bg-blue-700 rounded-full py-1 px-4 font-semibold">
+            <PencilIcon className="h-4 w-4" />
+            Post
+          </button>
+        </Link>
       </div>
     </div>
   );
