@@ -7,7 +7,6 @@
   }
 
   .dropdown-item {
-    @apply p-2 hover:bg-neutral-50 text-lg font-medium;
+    @apply p-2 hover:bg-neutral-50 text-lg font-medium hover:text-blue-700;
   }
-
 }

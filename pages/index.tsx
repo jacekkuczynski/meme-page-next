@@ -2,7 +2,7 @@ import Head from "next/head";
 import MemePost from "../components/MemePost/MemePost";
 
 import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
-
+import Profile from "../components/Profile/Profile";
 
 export default function Home() {
   return (
@@ -17,8 +17,8 @@ export default function Home() {
       </Head>
 
       <main>
-
         <MemeStreamLayout>
+          <Profile />
           <MemePost
             userAvatarSrc={"string"}
             username={"string"}
@@ -46,7 +46,6 @@ export default function Home() {
             downvoteCount={419}
             commentCount={419}
           />
-
         </MemeStreamLayout>
       </main>
     </>
