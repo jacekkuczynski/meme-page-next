@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import UserAvatar from "../../UserAvatar/UserAvatar";
 
@@ -41,8 +42,13 @@ const UserAvatarDropdown = () => {
       >
         <ul className="flex flex-col justify-center text-black divide-y-2 divide-dashed p-2">
           <li className="dropdown-item">Homepage</li>
-          <li className="dropdown-item">Sign Up/Login</li>
           <li className="dropdown-item">Post Meme</li>
+          <Link href="/api/auth/login">
+            <li className="dropdown-item">Sign Up/Login</li>
+          </Link>
+          <Link href="/api/auth/logout">
+            <li className="dropdown-item">Logout</li>
+          </Link>
         </ul>
       </div>
     </>

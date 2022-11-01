@@ -16,9 +16,11 @@ const Navbar = () => {
         </div>
       </Link>
       <div className="flex items-center gap-6">
-        <div className="hidden sm:block font-medium hover:text-blue-400 cursor-pointer">
-          Sign up/Log in
-        </div>
+        <Link href="/api/auth/login">
+          <div className="hidden sm:block font-medium hover:text-blue-400 cursor-pointer">
+            Sign up/Log in
+          </div>
+        </Link>
         <div className="bg-slate-300 rounded-full p-1 ">
           <div className="hidden sm:block">
             <UserAvatar avatarSrc={"/avatarExample.png"} />
