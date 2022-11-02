@@ -1,5 +1,5 @@
 import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase/initializeFirebase";
 import { v4 as uuidv4 } from "uuid";
@@ -10,6 +10,7 @@ const UploadMemeForm = () => {
   const [fileInput, setFileInput] = useState<null | File>(null);
   const [titleError, setTitleError] = useState<null | string>(null);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+  const inputTitleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (postTitle.length < 4) {
@@ -59,6 +60,7 @@ const UploadMemeForm = () => {
             });
             setFileInput(null);
             setPostTitle("");
+            if (inputTitleRef.current) inputTitleRef.current.value = "";
           });
         }
       );
@@ -74,6 +76,7 @@ const UploadMemeForm = () => {
         <h3 className="h3 text-left">Upload a post</h3>
 
         <input
+          ref={inputTitleRef}
           onChange={handleTitleChange}
           type="text"
           placeholder="Title..."
