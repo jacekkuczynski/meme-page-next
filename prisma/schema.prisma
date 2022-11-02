@@ -14,8 +14,9 @@ datasource db {
 
 model Post {
   id        Int       @id @default(autoincrement())
-  Likes     Int
-  Comments  Comment[]
+  upVotes   Int
+  downVotes Int
+  comments  Comment[]
   memeTitle String
   fileURL   String
   createdAt DateTime  @default(now())
