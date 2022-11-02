@@ -3,6 +3,7 @@ import MemePost from "../components/MemePost/MemePost";
 
 import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Profile from "../components/Profile/Profile";
+import { prisma } from "./api";
 
 export default function Home() {
   return (
@@ -51,3 +52,8 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps = async ({ req }) => {
+  const posts = await prisma.post.findMany({});
+  return { props: { posts } };
+};
