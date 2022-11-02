@@ -4,7 +4,6 @@ import UploadMemeForm from "../components/UploadMemeForm/UploadMemeForm";
 export default withPageAuthRequired(function upload({ user }) {
   return (
     <>
-      <div>Hello {user.name}</div>
       <UploadMemeForm />
     </>
   );

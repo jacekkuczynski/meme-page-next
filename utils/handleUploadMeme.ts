@@ -12,15 +12,12 @@ const initialDownVotesCount = 0;
 //file url = w8 till return from fire storage
 
 export const handleUploadMemeClick = async (
-  event: React.MouseEvent<HTMLElement>,
+  event: MouseEvent,
   uploadedPostData: uploadedPostDataType
 ) => {
   event.preventDefault();
   console.log("clicked");
-  handleUploadMeme(uploadedPostData);
-};
 
-const handleUploadMeme = async (uploadedPostData: uploadedPostDataType) => {
   axios
     .post("/api/createNewPost/createNewPost", uploadedPostData)
     .then((res) => {
