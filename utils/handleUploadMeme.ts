@@ -7,16 +7,10 @@ type uploadedPostDataType = {
   fileURL: string;
 };
 
-const initialUpVotesCount = 0;
-const initialDownVotesCount = 0;
-//file url = w8 till return from fire storage
-
-export const handleUploadMemeClick = async (
-  event: MouseEvent,
+export const handleUploadMemeDataToDb = async (
   uploadedPostData: uploadedPostDataType
 ) => {
-  event.preventDefault();
-  console.log("clicked");
+  console.log("handleUploadMemeDataToDb Fired");
 
   axios
     .post("/api/createNewPost/createNewPost", uploadedPostData)
@@ -27,5 +21,3 @@ export const handleUploadMemeClick = async (
       console.log("something went wrong...", err);
     });
 };
-
-//click handler => fire function that return Promise<void>

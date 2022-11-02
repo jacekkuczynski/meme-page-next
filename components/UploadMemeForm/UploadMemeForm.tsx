@@ -3,18 +3,32 @@ import React, { useEffect, useState } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase/initializeFirebase";
 import { v4 as uuidv4 } from "uuid";
+import { handleUploadMemeDataToDb } from "../../utils/handleUploadMeme";
 
 const UploadMemeForm = () => {
-  const [postTitle, setPostTitle] = useState<null | string>(null);
-  const [fileInput, setFileInput] = useState<any>();
+  const [postTitle, setPostTitle] = useState<string>("");
+  const [fileInput, setFileInput] = useState<null | File>(null);
   const [titleError, setTitleError] = useState<null | string>(null);
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+
+  useEffect(() => {
+    if (postTitle.length < 4) {
+      setTitleError("Minimum title length is 4");
+      setIsSubmitEnabled(false);
+    } else if (postTitle.length >= 4 && fileInput) {
+      setIsSubmitEnabled(true);
+      setTitleError("");
+    } else if (postTitle.length >= 4) {
+      setTitleError("");
+    }
+  }, [postTitle, fileInput]);
 
   const getUuid = () => {
     return uuidv4();
   };
 
-  const handleTitleChange = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPostTitle(event.target.value);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,29 +38,35 @@ const UploadMemeForm = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(fileInput);
-  }, [fileInput]);
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const storageRef = ref(storage, `/memes/${getUuid()}`);
-    const uploadTask = uploadBytesResumable(storageRef, fileInput);
+    if (fileInput) {
+      const uploadTask = uploadBytesResumable(storageRef, fileInput);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (err) => console.log(err),
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          console.log(url);
-        });
-      }
-    );
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (err) => console.log(err),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            console.log(url);
+            handleUploadMemeDataToDb({
+              upVotes: 0,
+              downVotes: 0,
+              memeTitle: postTitle,
+              fileURL: url,
+            });
+            setFileInput(null);
+            setPostTitle("");
+          });
+        }
+      );
+    }
   };
 
   return (
-    <div className="">
+    <>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col my-12 gap-4 justify-around items-center"
@@ -60,7 +80,11 @@ const UploadMemeForm = () => {
           className="block w-64 border border-blue-600 focus:outline-none  p-1 rounded-lg shadow-lg"
         ></input>
 
-        <div className={`${titleError ? "block" : "hidden"} text-red-700`}>
+        <div
+          className={`${
+            titleError && postTitle.length > 0 ? "visible" : "invisible"
+          } text-red-700 block`}
+        >
           {titleError}
         </div>
 
@@ -75,11 +99,19 @@ const UploadMemeForm = () => {
           />
         </label>
 
-        <button type="submit" className={`button`}>
-          Submit
-        </button>
+        <div>{fileInput?.name}</div>
+
+        {isSubmitEnabled ? (
+          <button type="submit" className="button">
+            Submit
+          </button>
+        ) : (
+          <button type="submit" className="button-disabled" disabled>
+            Submit
+          </button>
+        )}
       </form>
-    </div>
+    </>
   );
 };
 
