@@ -20,7 +20,7 @@
     "**/*.ts",
     "**/*.tsx",
     "pages/api/[...nextauth].js",
-    "pages/api/prisma/createNewPost.js"
+    "pages/api/createNewPost/createNewPost.js"
   ],
   "exclude": ["node_modules"]
 }
