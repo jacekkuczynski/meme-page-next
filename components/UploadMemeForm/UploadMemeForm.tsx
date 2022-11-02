@@ -1,12 +1,7 @@
 import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { firebaseStorage } from "../../firebase/initializeFirebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../firebase/initializeFirebase";
 import { v4 as uuidv4 } from "uuid";
 
 const UploadMemeForm = () => {
@@ -35,7 +30,7 @@ const UploadMemeForm = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const storageRef = ref(firebaseStorage, `/memes/${getUuid()}`);
+    const storageRef = ref(storage, `/memes/${getUuid()}`);
     const uploadTask = uploadBytesResumable(storageRef, fileInput);
 
     uploadTask.on(
