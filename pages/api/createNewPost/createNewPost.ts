@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "..";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
@@ -25,7 +25,7 @@ const createNewPost = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({ createNewPost, succes: true });
   } catch (error) {
     console.error("Request error", error);
-    res.status(500).json({ error: "error creating question", succes: false });
+    res.status(500).json({ error: "error creating post", succes: false });
   }
 };
 

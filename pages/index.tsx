@@ -53,7 +53,7 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
-  const posts = await prisma.post.findMany({});
-  return { props: { posts } };
-};
+// export const getServerSideProps = async ({ req }) => {
+//   const posts = await prisma.post.findMany({});
+//   return { props: { posts } };
+// };
