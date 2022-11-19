@@ -1,8 +1,13 @@
+import { UserProfile } from "@auth0/nextjs-auth0";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import UserAvatar from "../../UserAvatar/UserAvatar";
 
-const UserAvatarDropdown = () => {
+interface UserAvatarDropdown {
+  user: UserProfile | undefined;
+}
+
+const UserAvatarDropdown = ({ user }: UserAvatarDropdown) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
   const avatarRef = useRef<null | HTMLDivElement>(null);
@@ -41,14 +46,25 @@ const UserAvatarDropdown = () => {
         }hidden absolute top-12 right-0 h-fit border w-1/2 bg-white rounded-l-lg`}
       >
         <ul className="flex flex-col justify-center text-black divide-y-2 divide-dashed p-2">
-          <li className="dropdown-item">Homepage</li>
-          <li className="dropdown-item">Post Meme</li>
-          <Link href="/api/auth/login">
-            <li className="dropdown-item">Sign Up/Login</li>
+          <Link href="/">
+            <li className="dropdown-item">Homepage</li>
           </Link>
-          <Link href="/api/auth/logout">
-            <li className="dropdown-item">Logout</li>
+          <Link href="/profile">
+            <li className="dropdown-item">Profile</li>
           </Link>
+          <Link href="/upload">
+            <li className="dropdown-item">Post Meme</li>
+          </Link>
+
+          {user ? (
+            <Link href="/api/auth/logout">
+              <li className="dropdown-item">Logout</li>
+            </Link>
+          ) : (
+            <Link href="/api/auth/login">
+              <li className="dropdown-item">Sign Up/Login</li>
+            </Link>
+          )}
         </ul>
       </div>
     </>
