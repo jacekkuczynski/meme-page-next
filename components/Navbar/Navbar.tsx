@@ -8,7 +8,6 @@ import { useUser } from "@auth0/nextjs-auth0";
 
 const Navbar = () => {
   const { user } = useUser();
-  console.log(user);
   return (
     <div className="sticky z-50 top-0 flex items-center justify-around w-full h-12  bg-black text-white text-sm">
       <Link href={"/"}>
