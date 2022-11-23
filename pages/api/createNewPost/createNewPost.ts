@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "..";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
@@ -18,16 +16,18 @@ const createNewPost = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const newEntry = await prisma.post.create({
       data: {
-        upVotes: body.upVotes,
-        downVotes: body.downVotes,
+        upvoteCount: body.upvoteCount,
+        downvoteCount: body.downvoteCount,
         memeTitle: body.memeTitle,
         fileURL: body.fileURL,
+        username: body.username,
+        userAvatarURL: body.userAvatarURL,
       },
     });
     return res.status(200).json({ createNewPost, succes: true });
   } catch (error) {
     console.error("Request error", error);
-    res.status(500).json({ error: "error creating question", succes: false });
+    res.status(500).json({ error: "error creating post", succes: false });
   }
 };
 
