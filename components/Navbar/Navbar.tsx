@@ -2,12 +2,12 @@ import UserAvatar from "../UserAvatar/UserAvatar";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import UserAvatarDropdown from "./UserAvatarDropdown/UserAvatarDropdown";
+import { useUser } from "@auth0/nextjs-auth0";
 
-//if !user login modal on POST button and Login/Signup
 // if !user anonymous avatar else userAvatar
-//if user POST button Link to Post Page
 
 const Navbar = () => {
+  const { user } = useUser();
   return (
     <div className="sticky z-50 top-0 flex items-center justify-around w-full h-12  bg-black text-white text-sm">
       <Link href={"/"}>
@@ -16,17 +16,28 @@ const Navbar = () => {
         </div>
       </Link>
       <div className="flex items-center gap-6">
-        <Link href="/api/auth/login">
-          <div className="hidden sm:block font-medium hover:text-blue-400 cursor-pointer">
-            Sign up/Log in
-          </div>
-        </Link>
+        {user ? (
+          <Link href="/api/auth/logout">
+            <div className="hidden sm:block font-medium hover:text-blue-400 cursor-pointer">
+              Logout
+            </div>
+          </Link>
+        ) : (
+          <Link href="/api/auth/login">
+            <div className="hidden sm:block font-medium hover:text-blue-400 cursor-pointer">
+              Sign up/Log in
+            </div>
+          </Link>
+        )}
+
         <div className="bg-slate-300 rounded-full p-1 ">
           <div className="hidden sm:block">
-            <UserAvatar avatarSrc={"/avatarExample.png"} />
+            <Link href="/profile">
+              <UserAvatar avatarSrc={"/avatarExample.png"} />
+            </Link>
           </div>
           <div className="block sm:hidden cursor-pointer">
-            <UserAvatarDropdown />
+            <UserAvatarDropdown user={user} />
           </div>
         </div>
         <Link href="/upload">

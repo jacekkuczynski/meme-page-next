@@ -1,10 +1,12 @@
 import axios from "axios";
 
 type uploadedPostDataType = {
-  upVotes: number;
-  downVotes: number;
+  upvoteCount: number;
+  downvoteCount: number;
   memeTitle: string;
   fileURL: string;
+  username: string;
+  userAvatarURL: string;
 };
 
 export const handleUploadMemeDataToDb = async (
