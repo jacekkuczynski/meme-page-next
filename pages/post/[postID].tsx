@@ -5,14 +5,16 @@ import MemeStreamLayout from "../../components/MemeStreamLayout/MemeStreamLayout
 import { GetServerSideProps } from "next/types";
 import { PostType } from "../../types/types";
 
-const PostID = ({ post }: PostType | null) => {
-  console.log(post);
-  console.log(typeof post);
+interface PostI {
+  post: PostType | null;
+}
+
+const PostID = ({ post }: PostI) => {
   return (
     <>
       <Navbar />
       <MemeStreamLayout>
-        {post && (
+        {post ? (
           <MemePost
             userAvatarURL={"/avatarExample.png"}
             username={post.username}
@@ -23,8 +25,9 @@ const PostID = ({ post }: PostType | null) => {
             commentCount={0}
             postHref={post.id}
           />
+        ) : (
+          <div>Sorry, no meme of given url</div>
         )}
-        {!post && <div>Sorry, no meme of given url</div>}
       </MemeStreamLayout>
     </>
   );
@@ -35,7 +38,7 @@ export default PostID;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const url = context.query.postID;
 
-  if (Number(url) !== NaN) {
+  if (Number.isInteger(Number(url))) {
     const data = await prisma.post.findUnique({
       where: {
         id: Number(url),
@@ -44,6 +47,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (data !== null) {
       const post = JSON.parse(JSON.stringify(data));
       return { props: { post } };
-    } else return { props: { postID: null } };
-  } else return { props: { postID: null } };
+    } else return { props: { post: null } };
+  } else return { props: { post: null } };
 };
