@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 const createNewPost = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;
   try {
-    const newEntry = await prisma.post.create({
+    const newPost = await prisma.post.create({
       data: {
         upvoteCount: body.upvoteCount,
         downvoteCount: body.downvoteCount,

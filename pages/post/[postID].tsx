@@ -1,20 +1,30 @@
 import { prisma } from "../api";
 import Navbar from "../../components/Navbar/Navbar";
 import MemePost from "../../components/MemePost/MemePost";
-import MemeStreamLayout from "../../components/MemeStreamLayout/MemeStreamLayout";
 import { GetServerSideProps } from "next/types";
 import { PostType } from "../../types/types";
 import CommentsForm from "../../components/CommentsSection/CommentsForm";
 import CommentsCount from "../../components/CommentsSection/CommentsCount";
 import CommentsDisplay from "../../components/CommentsSection/CommentsDisplay";
+import { useUser } from "@auth0/nextjs-auth0";
+import { useEffect, useState } from "react";
 
 interface PostPageI {
   post: PostType | null;
 }
 
 const PostID = ({ post }: PostPageI) => {
+  const { user } = useUser();
+  const [userState, setUserState] = useState("");
   const postData = post?.postData;
   const commentsData = post?.commentsData;
+
+  useEffect(() => {
+    if (user?.nickname) {
+      setUserState(user.nickname);
+    }
+  }, [user]);
+
   return (
     <>
       <Navbar />
@@ -32,7 +42,11 @@ const PostID = ({ post }: PostPageI) => {
               postHref={postData.id}
             />
             <CommentsCount commentsCount={commentsData?.length} />
-            <CommentsForm />
+            {user ? (
+              <CommentsForm username={userState} />
+            ) : (
+              <div className="my-4">Login to post comment</div>
+            )}
             {commentsData && <CommentsDisplay comment={commentsData} />}
           </>
         ) : (
