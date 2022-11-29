@@ -3,8 +3,8 @@ import { useUser } from "@auth0/nextjs-auth0";
 const CommentsForm = () => {
   const { user } = useUser();
   return (
-    <section className="bg-white w-full py-8">
-      <div className="w-full mx-auto px-4">
+    <section className="bg-white w-8/12 py-8">
+      <div className="w-full">
         <form className="mb-6">
           <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
             <textarea

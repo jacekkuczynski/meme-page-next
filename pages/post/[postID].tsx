@@ -6,40 +6,41 @@ import { GetServerSideProps } from "next/types";
 import { PostType } from "../../types/types";
 import CommentsForm from "../../components/CommentsSection/CommentsForm";
 import CommentsCount from "../../components/CommentsSection/CommentsCount";
+import CommentsDisplay from "../../components/CommentsSection/CommentsDisplay";
 
 interface PostPageI {
   post: PostType | null;
 }
 
 const PostID = ({ post }: PostPageI) => {
-  console.log(post);
   const postData = post?.postData;
   const commentsData = post?.commentsData;
   return (
     <>
       <Navbar />
-      <MemeStreamLayout>
+      <section className="flex flex-col items-center w-full">
         {postData ? (
-          <MemePost
-            userAvatarURL={"/avatarExample.png"}
-            username={postData.username}
-            memeTitle={postData.memeTitle}
-            fileURL={postData.fileURL}
-            upvoteCount={postData.upvoteCount}
-            downvoteCount={postData.downvoteCount}
-            commentCount={0}
-            postHref={postData.id}
-          />
+          <>
+            <MemePost
+              userAvatarURL={"/avatarExample.png"}
+              username={postData.username}
+              memeTitle={postData.memeTitle}
+              fileURL={postData.fileURL}
+              upvoteCount={postData.upvoteCount}
+              downvoteCount={postData.downvoteCount}
+              commentCount={0}
+              postHref={postData.id}
+            />
+            <CommentsCount commentsCount={commentsData?.length} />
+            <CommentsForm />
+            {commentsData && <CommentsDisplay comment={commentsData} />}
+          </>
         ) : (
-          <div>Sorry, no meme of given url</div>
+          <>
+            <div>Sorry, no meme of given url</div>
+          </>
         )}
-        {commentsData ? (
-          <CommentsCount commentsCount={commentsData.length} />
-        ) : (
-          <CommentsCount />
-        )}
-        <CommentsForm />
-      </MemeStreamLayout>
+      </section>
     </>
   );
 };

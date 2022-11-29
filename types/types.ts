@@ -1,4 +1,4 @@
-export type PostType = { postData: postData; commentsData?: comment[] };
+export type PostType = { postData: postData; commentsData?: commentType[] };
 
 type postData = {
   createdAt: string;
@@ -13,7 +13,7 @@ type postData = {
   comments: string[];
 };
 
-type comment = {
+export type commentType = {
   commentContent: string;
   date: string;
   id: number;
