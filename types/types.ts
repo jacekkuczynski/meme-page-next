@@ -8,4 +8,5 @@ export type PostType = {
   upvoteCount: number;
   userAvatarURL: string;
   username: string;
+  comments: string[];
 };
