@@ -4,6 +4,7 @@ import MemePost from "../../components/MemePost/MemePost";
 import MemeStreamLayout from "../../components/MemeStreamLayout/MemeStreamLayout";
 import { GetServerSideProps } from "next/types";
 import { PostType } from "../../types/types";
+import Comments from "../../components/CommentsSection/Comments";
 
 interface PostI {
   post: PostType | null;
@@ -28,6 +29,7 @@ const PostID = ({ post }: PostI) => {
         ) : (
           <div>Sorry, no meme of given url</div>
         )}
+        <Comments />
       </MemeStreamLayout>
     </>
   );
