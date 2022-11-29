@@ -36,7 +36,7 @@ export default function Home(posts: { posts: post[] }) {
           {/* <Profile /> */}
           <>
             {posts.posts.length > 0 &&
-              posts.posts.map((post: post, index: number) => {
+              posts.posts.reverse().map((post: post, index: number) => {
                 return (
                   <MemePost
                     key={index}

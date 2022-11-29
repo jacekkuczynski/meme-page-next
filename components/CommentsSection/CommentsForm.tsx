@@ -1,6 +1,6 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { handleAddComment } from "../../utils/handleAddComment";
 
 interface CommentsFormI {
@@ -11,6 +11,7 @@ const CommentsForm = ({ username }: CommentsFormI) => {
   const [commentContentState, setCommentContentState] = useState("");
   const router = useRouter();
   const currentPost = Number(router.query.postID);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -19,6 +20,10 @@ const CommentsForm = ({ username }: CommentsFormI) => {
       postId: currentPost,
       username: username,
     });
+    if (textAreaRef.current) textAreaRef.current.value = "";
+    setInterval(() => {
+      location.reload();
+    }, 1000);
   };
 
   return (
@@ -27,6 +32,7 @@ const CommentsForm = ({ username }: CommentsFormI) => {
         <form onSubmit={handleSubmit} className="mb-6">
           <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
             <textarea
+              ref={textAreaRef}
               onChange={(e) => {
                 setCommentContentState(e.target.value);
               }}

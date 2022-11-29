@@ -4,7 +4,7 @@ type MemeStreamLayoutProps = {
 
 const MemeStreamLayout = (props: MemeStreamLayoutProps) => {
   return (
-    <div className="flex flex-col items-center w-full mb-24 p-8">
+    <div className="flex flex-col items-center w-full mb-24 px-8 pb-8">
       {props.children}
     </div>
   );

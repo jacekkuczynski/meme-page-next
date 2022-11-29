@@ -38,7 +38,7 @@ const PostID = ({ post }: PostPageI) => {
               fileURL={postData.fileURL}
               upvoteCount={postData.upvoteCount}
               downvoteCount={postData.downvoteCount}
-              commentCount={0}
+              commentCount={commentsData!.length}
               postHref={postData.id}
             />
             <CommentsCount commentsCount={commentsData?.length} />

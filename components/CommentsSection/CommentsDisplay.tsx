@@ -10,7 +10,6 @@ const CommentsDisplay = (comment: CommentDisplayI) => {
       {comment &&
         comment.comment.map((comment, index) => {
           const date = new Date(Date.parse(comment.date)).toDateString();
-          console.log(date);
           return (
             <div
               key={index}
