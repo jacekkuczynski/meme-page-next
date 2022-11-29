@@ -1,4 +1,6 @@
-export type PostType = {
+export type PostType = { postData: postData; commentsData?: comment[] };
+
+type postData = {
   createdAt: string;
   downvoteCount: number;
   fileURL: string;
@@ -9,4 +11,12 @@ export type PostType = {
   userAvatarURL: string;
   username: string;
   comments: string[];
+};
+
+type comment = {
+  commentContent: string;
+  date: string;
+  id: number;
+  postId: number;
+  username: string;
 };

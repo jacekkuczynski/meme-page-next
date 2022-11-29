@@ -2,7 +2,6 @@ import { useUser } from "@auth0/nextjs-auth0";
 
 const CommentsForm = () => {
   const { user } = useUser();
-  console.log(user);
   return (
     <section className="bg-white w-full py-8">
       <div className="w-full mx-auto px-4">

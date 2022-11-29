@@ -12,25 +12,32 @@ interface PostPageI {
 }
 
 const PostID = ({ post }: PostPageI) => {
+  console.log(post);
+  const postData = post?.postData;
+  const commentsData = post?.commentsData;
   return (
     <>
       <Navbar />
       <MemeStreamLayout>
-        {post ? (
+        {postData ? (
           <MemePost
             userAvatarURL={"/avatarExample.png"}
-            username={post.username}
-            memeTitle={post.memeTitle}
-            fileURL={post.fileURL}
-            upvoteCount={post.upvoteCount}
-            downvoteCount={post.downvoteCount}
+            username={postData.username}
+            memeTitle={postData.memeTitle}
+            fileURL={postData.fileURL}
+            upvoteCount={postData.upvoteCount}
+            downvoteCount={postData.downvoteCount}
             commentCount={0}
-            postHref={post.id}
+            postHref={postData.id}
           />
         ) : (
           <div>Sorry, no meme of given url</div>
         )}
-        <CommentsCount />
+        {commentsData ? (
+          <CommentsCount commentsCount={commentsData.length} />
+        ) : (
+          <CommentsCount />
+        )}
         <CommentsForm />
       </MemeStreamLayout>
     </>
@@ -49,13 +56,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         id: Number(url),
       },
     });
-    // const commentsData = await prisma.comment.findUnique({
-    //   where: {
-    //     postId: Number(url),
-    //   },
-    // });
+    const commentsData = await prisma.comment.findMany({
+      where: {
+        postId: Number(url),
+      },
+    });
     if (postData !== null) {
-      const post = JSON.parse(JSON.stringify(postData));
+      const post = JSON.parse(JSON.stringify({ postData, commentsData }));
       return { props: { post } };
     } else return { props: { post: null } };
   } else return { props: { post: null } };
