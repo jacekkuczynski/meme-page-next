@@ -60,11 +60,6 @@ const MemePost = ({
           <ArrowDownIcon className="h-4 w-4 text-blue-500" />
           <div>{downvoteCount}</div>
         </div>
-        {/* comment button */}
-        <div className="meme-control-button">
-          <ChatBubbleLeftIcon className="h-4 w-4 text-blue-500" />
-          <div>{68}</div>
-        </div>
       </div>
     </div>
   );
