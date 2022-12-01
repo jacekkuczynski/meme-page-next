@@ -1,10 +1,7 @@
 import Image from "next/image";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/outline";
-
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
-import { handlePostVote } from "../../utils/handlePostVote";
-import { useEffect, useState } from "react";
 
 type MemePostProps = {
   userAvatarURL: string;
@@ -27,17 +24,6 @@ const MemePost = ({
   commentCount,
   postHref,
 }: MemePostProps) => {
-  const [isVotingActive, setIsVotingActive] = useState(true);
-
-  const handleUpvote = () => {
-    if (isVotingActive) handlePostVote({ isUpvote: true, postId: postHref });
-    setIsVotingActive(false);
-  };
-  const handleDownvote = () => {
-    if (isVotingActive) handlePostVote({ isUpvote: false, postId: postHref });
-    setIsVotingActive(false);
-  };
-
   return (
     <div className="flex flex-col items-center gap-1 w-fit py-5 border-b-2">
       <div className="flex items-center gap-2 text-left w-full text-sm">
@@ -60,26 +46,12 @@ const MemePost = ({
       </Link>
       <div className="flex gap-4 w-full mt-2">
         {/* upvote button */}
-        <button
-          onClick={handleUpvote}
-          className={
-            isVotingActive
-              ? "meme-control-button"
-              : "meme-control-button--disabled "
-          }
-        >
+        <button className={"meme-control-button"}>
           <ArrowUpIcon className="h-4 w-4 text-blue-500" />
           <div>{upvoteCount}</div>
         </button>
         {/* downvote button */}
-        <button
-          onClick={handleDownvote}
-          className={
-            isVotingActive
-              ? "meme-control-button"
-              : "meme-control-button--disabled "
-          }
-        >
+        <button className={"meme-control-button"}>
           <ArrowDownIcon className="h-4 w-4 text-blue-500" />
           <div>{downvoteCount}</div>
         </button>
