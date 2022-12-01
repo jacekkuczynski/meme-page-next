@@ -3,11 +3,9 @@ import Navbar from "../../components/Navbar/Navbar";
 import MemePost from "../../components/MemePost/MemePost";
 import { GetServerSideProps } from "next/types";
 import { PostType } from "../../types/types";
-import CommentsForm from "../../components/CommentsSection/CommentsForm";
-import CommentsCount from "../../components/CommentsSection/CommentsCount";
-import CommentsDisplay from "../../components/CommentsSection/CommentsDisplay";
 import { useUser } from "@auth0/nextjs-auth0";
 import { useEffect, useState } from "react";
+import CommentsSection from "../../components/CommentsSection/CommentsSection";
 
 interface PostPageI {
   post: PostType | null;
@@ -41,13 +39,15 @@ const PostID = ({ post }: PostPageI) => {
               commentCount={commentsData!.length}
               postHref={postData.id}
             />
-            <CommentsCount commentsCount={commentsData?.length} />
-            {user ? (
-              <CommentsForm username={userState} />
+            {commentsData ? (
+              <CommentsSection
+                commentsCount={commentsData?.length}
+                username={userState}
+                comment={commentsData}
+              />
             ) : (
-              <div className="my-4">Login to post comment</div>
+              <CommentsSection username={userState} comment={[]} />
             )}
-            {commentsData && <CommentsDisplay comment={commentsData} />}
           </>
         ) : (
           <>

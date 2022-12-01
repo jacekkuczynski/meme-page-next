@@ -1,13 +1,13 @@
-import { useUser } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
 import { handleAddComment } from "../../utils/handleAddComment";
 
 interface CommentsFormI {
   username: string;
+  onSubmit: Function;
 }
 
-const CommentsForm = ({ username }: CommentsFormI) => {
+const CommentsForm = ({ username, onSubmit }: CommentsFormI) => {
   const [commentContentState, setCommentContentState] = useState("");
   const router = useRouter();
   const currentPost = Number(router.query.postID);
@@ -19,11 +19,10 @@ const CommentsForm = ({ username }: CommentsFormI) => {
       commentContent: commentContentState,
       postId: currentPost,
       username: username,
+    }).then((res) => {
+      onSubmit(res);
     });
     if (textAreaRef.current) textAreaRef.current.value = "";
-    setInterval(() => {
-      location.reload();
-    }, 1000);
   };
 
   return (

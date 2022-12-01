@@ -6,13 +6,13 @@ type addedCommentType = {
   username: string;
 };
 
-export const handleAddComment = async (uploadedPostData: addedCommentType) => {
-  console.log("handleAddComment Fired");
-
-  axios
-    .post("/api/createNewComment/createNewComment", uploadedPostData)
+export const handleAddComment = async (
+  uploadedCommentData: addedCommentType
+) => {
+  return axios
+    .post("/api/createNewComment/createNewComment", uploadedCommentData)
     .then((res) => {
-      console.log("succes", res);
+      return res.data.newPost;
     })
     .catch((err) => {
       console.log("something went wrong...", err);

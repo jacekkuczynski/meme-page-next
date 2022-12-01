@@ -1,10 +1,5 @@
 import Image from "next/image";
-import {
-  ArrowUpIcon,
-  ArrowDownIcon,
-  ChatBubbleLeftIcon,
-} from "@heroicons/react/24/outline";
-
+import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/outline";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
 
@@ -51,18 +46,20 @@ const MemePost = ({
       </Link>
       <div className="flex gap-4 w-full mt-2">
         {/* upvote button */}
-        <div className="meme-control-button">
+        <button className={"meme-control-button"}>
           <ArrowUpIcon className="h-4 w-4 text-blue-500" />
           <div>{upvoteCount}</div>
-        </div>
+        </button>
         {/* downvote button */}
-        <div className="meme-control-button">
+        <button className={"meme-control-button"}>
           <ArrowDownIcon className="h-4 w-4 text-blue-500" />
           <div>{downvoteCount}</div>
-        </div>
+        </button>
       </div>
     </div>
   );
 };
 
 export default MemePost;
+
+// meme-control-button--disabled
