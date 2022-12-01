@@ -18,7 +18,7 @@ type post = {
   username: string;
 };
 
-export default function Home(posts: { posts: post[] }) {
+export default function Home({ posts }: { posts: post[] }) {
   return (
     <>
       <Head>
@@ -35,8 +35,8 @@ export default function Home(posts: { posts: post[] }) {
         <MemeStreamLayout>
           {/* <Profile /> */}
           <>
-            {posts.posts.length > 0 &&
-              posts.posts.map((post: post, index: number) => {
+            {posts.length > 0 &&
+              posts.map((post: post, index: number) => {
                 return (
                   <MemePost
                     key={index}

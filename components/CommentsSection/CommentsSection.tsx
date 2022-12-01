@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { commentType } from "../../types/types";
 import { handleAddComment } from "../../utils/handleAddComment";
+import CommentsForm from "./CommentsForm";
 
 interface CommentsSectionI {
   commentsCount?: number;
   username: string;
-  comment: commentType[];
+  comment: commentType[] | [];
 }
 
 const CommentsSection = ({
@@ -14,22 +15,14 @@ const CommentsSection = ({
   username,
   comment,
 }: CommentsSectionI) => {
-  const [commentContentState, setCommentContentState] = useState("");
-  const router = useRouter();
-  const currentPost = Number(router.query.postID);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [commentsState, setCommentsState] = useState<commentType[]>([]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    handleAddComment({
-      commentContent: commentContentState,
-      postId: currentPost,
-      username: username,
-    });
-    if (textAreaRef.current) textAreaRef.current.value = "";
-    setInterval(() => {
-      location.reload();
-    }, 1000);
+  useEffect(() => {
+    if (comment) setCommentsState(comment);
+  }, []);
+
+  const handleOnSubmit = (newCommentData: commentType) => {
+    setCommentsState((prevState) => [...prevState, newCommentData]);
   };
 
   return (
@@ -43,46 +36,30 @@ const CommentsSection = ({
         </div>
       </div>
       {/* comments form */}
-      <div className="bg-white w-8/12 py-8">
-        <div className="w-full">
-          <form onSubmit={handleSubmit} className="mb-6">
-            <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
-              <textarea
-                ref={textAreaRef}
-                onChange={(e) => {
-                  setCommentContentState(e.target.value);
-                }}
-                rows={6}
-                className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
-                placeholder="Write a comment..."
-                required
-              ></textarea>
-            </div>
-            <button type="submit" className="button">
-              Post comment
-            </button>
-          </form>
-        </div>
-      </div>
+      {username.length > 0 ? (
+        <CommentsForm username={username} onSubmit={handleOnSubmit} />
+      ) : (
+        <div className="my-8">Login to post comment</div>
+      )}
+      {/* comment display */}
       <div className="w-8/12">
-        {comment &&
-          comment.map((comment, index) => {
-            const date = new Date(Date.parse(comment.date)).toDateString();
-            return (
-              <div
-                key={index}
-                className="w-full flex flex-col mb-8 mr-3 border border-gray-200 p-4 rounded bg-neutral-50 shadow-sm "
-              >
-                <div className="text-sm text-gray-700 font-light">
-                  {comment.username}
-                </div>
-                <div className="text-xs text-gray-500 font-light">{date}</div>
-                <div className="text-base text-gray-800 mt-2 ">
-                  {comment.commentContent}
-                </div>
+        {commentsState.map((comment, index) => {
+          const date = new Date(Date.parse(comment.date)).toDateString();
+          return (
+            <div
+              key={index}
+              className="w-full flex flex-col mb-8 mr-3 border border-gray-200 p-4 rounded bg-neutral-50 shadow-sm "
+            >
+              <div className="text-sm text-gray-700 font-light">
+                {comment.username}
               </div>
-            );
-          })}
+              <div className="text-xs text-gray-500 font-light">{date}</div>
+              <div className="text-base text-gray-800 mt-2 ">
+                {comment.commentContent}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </>
   );
