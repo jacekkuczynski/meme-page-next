@@ -20,7 +20,8 @@
     "**/*.ts",
     "**/*.tsx",
     "pages/api/[...nextauth].js",
-    "pages/api/createNewPost/createNewPost.js"
+    "pages/api/createNewPost/createNewPost.js",
+    "pages/api/downVotePost"
   ],
   "exclude": ["node_modules"]
 }

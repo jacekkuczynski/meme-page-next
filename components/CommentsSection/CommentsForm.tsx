@@ -19,15 +19,10 @@ const CommentsForm = ({ username, onSubmit }: CommentsFormI) => {
       commentContent: commentContentState,
       postId: currentPost,
       username: username,
+    }).then((res) => {
+      onSubmit(res);
     });
     if (textAreaRef.current) textAreaRef.current.value = "";
-
-    onSubmit({
-      commentContent: commentContentState,
-      postId: currentPost,
-      username: username,
-      date: new Date(),
-    });
   };
 
   return (

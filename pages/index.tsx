@@ -35,7 +35,7 @@ export default function Home({ posts }: { posts: post[] }) {
         <MemeStreamLayout>
           {/* <Profile /> */}
           <>
-            {posts.length > 0 &&
+            {posts &&
               posts.map((post: post, index: number) => {
                 return (
                   <MemePost

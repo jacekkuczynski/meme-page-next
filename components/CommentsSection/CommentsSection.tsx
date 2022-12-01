@@ -31,7 +31,7 @@ const CommentsSection = ({
       <div className="w-8/12 mx-auto mt-8">
         <div className="flex justify-between items-center">
           <h2 className="text-lg lg:text-2xl font-bold text-gray-900 ">
-            Discussion ({commentsCount ? commentsCount : 0})
+            Discussion ({commentsState.length})
           </h2>
         </div>
       </div>
