@@ -24,7 +24,7 @@ const createNewPost = async (req: NextApiRequest, res: NextApiResponse) => {
         userAvatarURL: body.userAvatarURL,
       },
     });
-    return res.status(200).json({ createNewPost, succes: true });
+    return res.status(200).json({ createNewPost, succes: true, newPost });
   } catch (error) {
     console.error("Request error", error);
     res.status(500).json({ error: "error creating post", succes: false });

@@ -53,9 +53,8 @@ const UploadMemeForm = ({ userNickname }: UploadMemeFormProps) => {
         "state_changed",
         (snapshot) => {},
         (err) => console.log(err),
-        () => {
+        async () => {
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            console.log(url);
             handleUploadMemeDataToDb({
               upvoteCount: 0,
               downvoteCount: 0,
@@ -63,10 +62,16 @@ const UploadMemeForm = ({ userNickname }: UploadMemeFormProps) => {
               fileURL: url,
               username: userNickname,
               userAvatarURL: "",
-            });
-            setFileInput(null);
-            setPostTitle("");
-            if (inputTitleRef.current) inputTitleRef.current.value = "";
+            })
+              .then((res) => {
+                console.log(res.id, "res");
+                window.location.replace(`/post/${res.id}`);
+              })
+              .then(() => {
+                setFileInput(null);
+                setPostTitle("");
+                if (inputTitleRef.current) inputTitleRef.current.value = "";
+              });
           });
         }
       );
