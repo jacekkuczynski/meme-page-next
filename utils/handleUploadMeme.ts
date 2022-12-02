@@ -14,10 +14,10 @@ export const handleUploadMemeDataToDb = async (
 ) => {
   console.log("handleUploadMemeDataToDb Fired");
 
-  axios
+  return axios
     .post("/api/createNewPost/createNewPost", uploadedPostData)
     .then((res) => {
-      console.log("succes", res);
+      return res.data.newPost;
     })
     .catch((err) => {
       console.log("something went wrong...", err);
