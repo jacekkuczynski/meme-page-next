@@ -14,6 +14,7 @@ const UploadMemeForm = ({ userNickname }: UploadMemeFormProps) => {
   const [fileInput, setFileInput] = useState<null | File>(null);
   const [titleError, setTitleError] = useState<null | string>(null);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const inputTitleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ const UploadMemeForm = ({ userNickname }: UploadMemeFormProps) => {
     const storageRef = ref(storage, `/memes/${getUuid()}`);
     if (fileInput) {
       const uploadTask = uploadBytesResumable(storageRef, fileInput);
-
+      setIsUploading(true);
       uploadTask.on(
         "state_changed",
         (snapshot) => {},
@@ -62,15 +63,9 @@ const UploadMemeForm = ({ userNickname }: UploadMemeFormProps) => {
               fileURL: url,
               username: userNickname,
               userAvatarURL: "",
-            })
-              .then((res) => {
-                window.location.replace(`/post/${res.id}`);
-              })
-              .then(() => {
-                setFileInput(null);
-                setPostTitle("");
-                if (inputTitleRef.current) inputTitleRef.current.value = "";
-              });
+            }).then((res) => {
+              window.location.replace(`/post/${res.id}`);
+            });
           });
         }
       );
@@ -113,6 +108,7 @@ const UploadMemeForm = ({ userNickname }: UploadMemeFormProps) => {
         </label>
 
         <div>{fileInput?.name}</div>
+        {isUploading ? <div>Uploading</div> : ""}
 
         {isSubmitEnabled ? (
           <button type="submit" className="button">
