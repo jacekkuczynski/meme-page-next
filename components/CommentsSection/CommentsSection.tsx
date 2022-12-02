@@ -1,7 +1,5 @@
-import { useRouter } from "next/router";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { commentType } from "../../types/types";
-import { handleAddComment } from "../../utils/handleAddComment";
 import CommentsForm from "./CommentsForm";
 
 interface CommentsSectionI {

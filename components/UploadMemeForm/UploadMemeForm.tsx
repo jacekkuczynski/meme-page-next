@@ -64,7 +64,6 @@ const UploadMemeForm = ({ userNickname }: UploadMemeFormProps) => {
               userAvatarURL: "",
             })
               .then((res) => {
-                console.log(res.id, "res");
                 window.location.replace(`/post/${res.id}`);
               })
               .then(() => {

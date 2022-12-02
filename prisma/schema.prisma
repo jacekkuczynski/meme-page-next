@@ -2,14 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Post {
@@ -23,6 +22,10 @@ model Post {
   userAvatarURL String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  userId        Int?
+  User          User?     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Comment {
@@ -32,4 +35,11 @@ model Comment {
   commentContent String
   username       String
   date           DateTime @default(now())
+
+  @@index([postId])
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  Posts Post[]
 }
