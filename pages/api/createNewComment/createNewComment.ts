@@ -14,14 +14,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 const createNewComment = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;
   try {
-    const newPost = await prisma.comment.create({
+    const newComment = await prisma.comment.create({
       data: {
         postId: body.postId,
         username: body.username,
         commentContent: body.commentContent,
       },
     });
-    return res.status(200).json({ createNewComment, succes: true, newPost });
+    return res.status(200).json({ createNewComment, succes: true, newComment });
   } catch (error) {
     console.error("Request error", error);
     res.status(500).json({ error: "error creating post", succes: false });
