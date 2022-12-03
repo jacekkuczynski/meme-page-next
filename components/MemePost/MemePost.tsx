@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/outline";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
+import { handlePostVote } from "../../utils/handlePostVote";
 
 type MemePostProps = {
   userAvatarURL: string;
@@ -24,6 +25,13 @@ const MemePost = ({
   commentCount,
   postHref,
 }: MemePostProps) => {
+  const handleUpvote = () => {
+    handlePostVote({ isUpvote: true, postId: postHref });
+  };
+  const handleDownvote = () => {
+    handlePostVote({ isUpvote: false, postId: postHref });
+  };
+
   return (
     <div className="flex flex-col items-center gap-1 w-fit py-5 border-b-2">
       <div className="flex items-center gap-2 text-left w-full text-sm">
@@ -46,12 +54,12 @@ const MemePost = ({
       </Link>
       <div className="flex gap-4 w-full mt-2">
         {/* upvote button */}
-        <button className={"meme-control-button"}>
+        <button onClick={handleDownvote} className={"meme-control-button"}>
           <ArrowUpIcon className="h-4 w-4 text-blue-500" />
           <div>{upvoteCount}</div>
         </button>
         {/* downvote button */}
-        <button className={"meme-control-button"}>
+        <button onClick={handleUpvote} className={"meme-control-button"}>
           <ArrowDownIcon className="h-4 w-4 text-blue-500" />
           <div>{downvoteCount}</div>
         </button>
