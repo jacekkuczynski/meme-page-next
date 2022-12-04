@@ -40,35 +40,32 @@ const MemePost = ({
 
   const handleUpvote = () => {
     if (likedState === false) {
-      handlePostVote({ isUpvote: true, postId: postHref });
-      console.log("upVoted");
+      handlePostVote({ liked: false, side: true, postId: postHref });
       setUpvoteCountState(upvoteCountState + 1);
       setDownvoteCountState(downvoteCountState - 1);
       setIsLikedState(true);
     } else if (likedState === null) {
-      handlePostVote({ isUpvote: true, postId: postHref });
-      console.log("upVoted");
+      handlePostVote({ liked: null, side: true, postId: postHref });
       setUpvoteCountState(upvoteCountState + 1);
       setIsLikedState(true);
     }
   };
   const handleDownvote = () => {
     if (likedState === true) {
-      handlePostVote({ isUpvote: false, postId: postHref });
-      console.log("downVoted");
+      handlePostVote({ liked: true, side: false, postId: postHref });
       setDownvoteCountState(downvoteCountState + 1);
       setUpvoteCountState(upvoteCountState - 1);
       setIsLikedState(false);
     } else if (likedState === null) {
-      handlePostVote({ isUpvote: false, postId: postHref });
+      handlePostVote({ liked: null, side: false, postId: postHref });
       setDownvoteCountState(downvoteCountState + 1);
       setIsLikedState(false);
     }
   };
 
-  useEffect(() => {
-    console.log(likedState);
-  }, [likedState]);
+  // useEffect(() => {
+  //   console.log(likedState);
+  // }, [likedState]);
 
   return (
     <div className="flex flex-col items-center gap-1 w-fit py-5 border-b-2">
@@ -96,7 +93,7 @@ const MemePost = ({
           onClick={handleUpvote}
           className={`${
             likedState === true
-              ? "meme-control-button--upvote"
+              ? "meme-control-button bg-green-200"
               : "meme-control-button"
           }`}
         >
@@ -108,8 +105,8 @@ const MemePost = ({
           onClick={handleDownvote}
           className={`${
             likedState === false
-              ? "meme-control-button--downvote"
-              : "meme-control-button"
+              ? "meme-control-button bg-red-200"
+              : "meme-control-button "
           }`}
         >
           <ArrowDownIcon className="h-4 w-4 text-blue-500" />
