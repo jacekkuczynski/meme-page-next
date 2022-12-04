@@ -14,8 +14,7 @@ type MemePostProps = {
   downvoteCount: number;
   commentCount: number;
   postHref: number;
-  isLiked: boolean;
-  isDisliked: boolean;
+  liked: boolean | null;
 };
 
 const MemePost = ({
@@ -27,61 +26,50 @@ const MemePost = ({
   downvoteCount,
   commentCount,
   postHref,
-  isLiked,
-  isDisliked,
+  liked,
 }: MemePostProps) => {
-  const [upvoteCountCountState, setUpvoteCountCountState] = useState(0);
+  const [upvoteCountState, setUpvoteCountState] = useState(0);
   const [downvoteCountState, setDownvoteCountState] = useState(0);
-  const [isLikedState, setIsLikedState] = useState<boolean | null>(null);
-  const [isDislikedState, setIsDislikedState] = useState<boolean | null>(null);
-
-  console.log("render");
+  const [likedState, setIsLikedState] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (downvoteCount) setDownvoteCountState(downvoteCount);
-    if (upvoteCount) setUpvoteCountCountState(upvoteCount);
-    if (isLiked) setIsLikedState(isLiked);
-    if (isDisliked) setIsDislikedState(isDisliked);
-  }, [downvoteCount, upvoteCount, isLiked, isDisliked]);
+    if (upvoteCount) setUpvoteCountState(upvoteCount);
+    if (liked !== undefined) setIsLikedState(liked);
+  }, [downvoteCount, upvoteCount, liked]);
 
   const handleUpvote = () => {
-    if (
-      (!isLikedState && !isDislikedState) ||
-      (!isLikedState && isDislikedState)
-    ) {
+    if (likedState === false) {
       handlePostVote({ isUpvote: true, postId: postHref });
       console.log("upVoted");
-      if (isDislikedState && !isLikedState) {
-        setUpvoteCountCountState(upvoteCountCountState + 1);
-        setDownvoteCountState(downvoteCountState - 1);
-      } else if (!isDislikedState && !isLikedState)
-        setUpvoteCountCountState(upvoteCountCountState + 1);
+      setUpvoteCountState(upvoteCountState + 1);
+      setDownvoteCountState(downvoteCountState - 1);
       setIsLikedState(true);
-      setIsDislikedState(false);
+    } else if (likedState === null) {
+      handlePostVote({ isUpvote: true, postId: postHref });
+      console.log("upVoted");
+      setUpvoteCountState(upvoteCountState + 1);
+      setIsLikedState(true);
     }
   };
   const handleDownvote = () => {
-    if (
-      (!isLikedState && !isDislikedState) ||
-      (isLikedState && !isDislikedState)
-    ) {
+    if (likedState === true) {
       handlePostVote({ isUpvote: false, postId: postHref });
-
       console.log("downVoted");
-      if (!isDislikedState && isLikedState) {
-        setDownvoteCountState(downvoteCountState + 1);
-        setUpvoteCountCountState(upvoteCountCountState - 1);
-      } else if (!isDislikedState && !isLikedState)
-        setDownvoteCountState(downvoteCountState + 1);
-      setIsDislikedState(true);
+      setDownvoteCountState(downvoteCountState + 1);
+      setUpvoteCountState(upvoteCountState - 1);
+      setIsLikedState(false);
+    } else if (likedState === null) {
+      handlePostVote({ isUpvote: false, postId: postHref });
+      setDownvoteCountState(downvoteCountState + 1);
       setIsLikedState(false);
     }
   };
 
   useEffect(() => {
-    console.log(isLikedState);
-    console.log(isDislikedState);
-  }, [isDislikedState, isLikedState]);
+    console.log(likedState);
+  }, [likedState]);
+
   return (
     <div className="flex flex-col items-center gap-1 w-fit py-5 border-b-2">
       <div className="flex items-center gap-2 text-left w-full text-sm">
@@ -107,20 +95,20 @@ const MemePost = ({
         <button
           onClick={handleUpvote}
           className={`${
-            isLikedState
-              ? "meme-control-button--disabled"
+            likedState === true
+              ? "meme-control-button--upvote"
               : "meme-control-button"
           }`}
         >
           <ArrowUpIcon className="h-4 w-4 text-blue-500" />
-          <div>{upvoteCountCountState}</div>
+          <div>{upvoteCountState}</div>
         </button>
         {/* downvote button */}
         <button
           onClick={handleDownvote}
           className={`${
-            isDislikedState
-              ? "meme-control-button--disabled"
+            likedState === false
+              ? "meme-control-button--downvote"
               : "meme-control-button"
           }`}
         >

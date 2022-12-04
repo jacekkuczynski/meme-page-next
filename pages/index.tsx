@@ -61,8 +61,7 @@ export default function Home({ posts }: { posts: post[] }) {
                     downvoteCount={post.downvoteCount}
                     commentCount={0}
                     postHref={post.id}
-                    isDisliked={null}
-                    isLiked={null}
+                    liked={true}
                   />
                 );
               })}
