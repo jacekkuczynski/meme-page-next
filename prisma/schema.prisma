@@ -47,17 +47,6 @@ model User {
   VotesByUser VotesByUser[]
 }
 
-// model DislikedByUser {
-//   Post   Post @relation(fields: [postId], references: [id])
-//   postId Int
-//   User   User @relation(fields: [userId], references: [id])
-//   userId Int
-
-//   @@id([postId, userId])
-//   @@index([userId])
-//   @@index([postId])
-// }
-
 model VotesByUser {
   Post       Post    @relation(fields: [postId], references: [id])
   postId     Int
@@ -65,6 +54,7 @@ model VotesByUser {
   userId     Int
   isLiked    Boolean
   isDisliked Boolean
+  isDeleted  Boolean
 
   @@id([postId, userId])
   @@index([userId])
