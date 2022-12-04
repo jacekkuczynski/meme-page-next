@@ -3,6 +3,7 @@ import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/outline";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
 import { handlePostVote } from "../../utils/handlePostVote";
+import { useEffect, useState } from "react";
 
 type MemePostProps = {
   userAvatarURL: string;
@@ -13,6 +14,8 @@ type MemePostProps = {
   downvoteCount: number;
   commentCount: number;
   postHref: number;
+  isLiked: boolean;
+  isDisliked: boolean;
 };
 
 const MemePost = ({
@@ -24,14 +27,61 @@ const MemePost = ({
   downvoteCount,
   commentCount,
   postHref,
+  isLiked,
+  isDisliked,
 }: MemePostProps) => {
+  const [upvoteCountCountState, setUpvoteCountCountState] = useState(0);
+  const [downvoteCountState, setDownvoteCountState] = useState(0);
+  const [isLikedState, setIsLikedState] = useState<boolean | null>(null);
+  const [isDislikedState, setIsDislikedState] = useState<boolean | null>(null);
+
+  console.log("render");
+
+  useEffect(() => {
+    if (downvoteCount) setDownvoteCountState(downvoteCount);
+    if (upvoteCount) setUpvoteCountCountState(upvoteCount);
+    if (isLiked) setIsLikedState(isLiked);
+    if (isDisliked) setIsDislikedState(isDisliked);
+  }, [downvoteCount, upvoteCount, isLiked, isDisliked]);
+
   const handleUpvote = () => {
-    handlePostVote({ isUpvote: true, postId: postHref });
+    if (
+      (!isLikedState && !isDislikedState) ||
+      (!isLikedState && isDislikedState)
+    ) {
+      handlePostVote({ isUpvote: true, postId: postHref });
+      console.log("upVoted");
+      if (isDislikedState && !isLikedState) {
+        setUpvoteCountCountState(upvoteCountCountState + 1);
+        setDownvoteCountState(downvoteCountState - 1);
+      } else if (!isDislikedState && !isLikedState)
+        setUpvoteCountCountState(upvoteCountCountState + 1);
+      setIsLikedState(true);
+      setIsDislikedState(false);
+    }
   };
   const handleDownvote = () => {
-    handlePostVote({ isUpvote: false, postId: postHref });
+    if (
+      (!isLikedState && !isDislikedState) ||
+      (isLikedState && !isDislikedState)
+    ) {
+      handlePostVote({ isUpvote: false, postId: postHref });
+
+      console.log("downVoted");
+      if (!isDislikedState && isLikedState) {
+        setDownvoteCountState(downvoteCountState + 1);
+        setUpvoteCountCountState(upvoteCountCountState - 1);
+      } else if (!isDislikedState && !isLikedState)
+        setDownvoteCountState(downvoteCountState + 1);
+      setIsDislikedState(true);
+      setIsLikedState(false);
+    }
   };
 
+  useEffect(() => {
+    console.log(isLikedState);
+    console.log(isDislikedState);
+  }, [isDislikedState, isLikedState]);
   return (
     <div className="flex flex-col items-center gap-1 w-fit py-5 border-b-2">
       <div className="flex items-center gap-2 text-left w-full text-sm">
@@ -54,14 +104,28 @@ const MemePost = ({
       </Link>
       <div className="flex gap-4 w-full mt-2">
         {/* upvote button */}
-        <button onClick={handleDownvote} className={"meme-control-button"}>
+        <button
+          onClick={handleUpvote}
+          className={`${
+            isLikedState
+              ? "meme-control-button--disabled"
+              : "meme-control-button"
+          }`}
+        >
           <ArrowUpIcon className="h-4 w-4 text-blue-500" />
-          <div>{upvoteCount}</div>
+          <div>{upvoteCountCountState}</div>
         </button>
         {/* downvote button */}
-        <button onClick={handleUpvote} className={"meme-control-button"}>
+        <button
+          onClick={handleDownvote}
+          className={`${
+            isDislikedState
+              ? "meme-control-button--disabled"
+              : "meme-control-button"
+          }`}
+        >
           <ArrowDownIcon className="h-4 w-4 text-blue-500" />
-          <div>{downvoteCount}</div>
+          <div>{downvoteCountState}</div>
         </button>
       </div>
     </div>

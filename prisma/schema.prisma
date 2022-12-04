@@ -12,20 +12,19 @@ datasource db {
 }
 
 model Post {
-  id             Int              @id @unique @default(autoincrement())
-  upvoteCount    Int
-  downvoteCount  Int
-  comments       Comment[]
-  memeTitle      String
-  fileURL        String
-  username       String
-  userAvatarURL  String
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  userId         Int?
-  User           User?            @relation(fields: [userId], references: [id])
-  DislikedByUser DislikedByUser[]
-  LikedByUser    LikedByUser[]
+  id            Int           @id @unique @default(autoincrement())
+  upvoteCount   Int
+  downvoteCount Int
+  comments      Comment[]
+  memeTitle     String
+  fileURL       String
+  username      String
+  userAvatarURL String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  userId        Int?
+  User          User?         @relation(fields: [userId], references: [id])
+  VotesByUser   VotesByUser[]
 
   @@index([userId])
 }
@@ -42,29 +41,30 @@ model Comment {
 }
 
 model User {
-  id             Int              @id @default(autoincrement())
-  userEmail      String
-  Posts          Post[]
-  DislikedByUser DislikedByUser[]
-  LikedByUser    LikedByUser[]
+  id          Int           @id @default(autoincrement())
+  userEmail   String
+  Posts       Post[]
+  VotesByUser VotesByUser[]
 }
 
-model DislikedByUser {
-  Post   Post @relation(fields: [postId], references: [id])
-  postId Int
-  User   User @relation(fields: [userId], references: [id])
-  userId Int
+// model DislikedByUser {
+//   Post   Post @relation(fields: [postId], references: [id])
+//   postId Int
+//   User   User @relation(fields: [userId], references: [id])
+//   userId Int
 
-  @@id([postId, userId])
-  @@index([userId])
-  @@index([postId])
-}
+//   @@id([postId, userId])
+//   @@index([userId])
+//   @@index([postId])
+// }
 
-model LikedByUser {
-  Post   Post @relation(fields: [postId], references: [id])
-  postId Int
-  User   User @relation(fields: [userId], references: [id])
-  userId Int
+model VotesByUser {
+  Post       Post    @relation(fields: [postId], references: [id])
+  postId     Int
+  User       User    @relation(fields: [userId], references: [id])
+  userId     Int
+  isLiked    Boolean
+  isDisliked Boolean
 
   @@id([postId, userId])
   @@index([userId])

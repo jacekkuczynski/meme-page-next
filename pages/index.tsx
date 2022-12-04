@@ -1,4 +1,6 @@
+import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import MemePost from "../components/MemePost/MemePost";
 
 import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
@@ -19,6 +21,17 @@ type post = {
 };
 
 export default function Home({ posts }: { posts: post[] }) {
+  const [postsData, setPostsData] = useState<post[]>([]);
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (user) {
+      setPostsData(posts);
+      console.log(posts);
+    } else {
+      setPostsData(posts);
+    }
+  }, [user, posts]);
   return (
     <>
       <Head>
@@ -35,8 +48,8 @@ export default function Home({ posts }: { posts: post[] }) {
         <MemeStreamLayout>
           {/* <Profile /> */}
           <>
-            {posts &&
-              posts.map((post: post, index: number) => {
+            {postsData &&
+              postsData.map((post: post, index: number) => {
                 return (
                   <MemePost
                     key={index}
@@ -48,6 +61,8 @@ export default function Home({ posts }: { posts: post[] }) {
                     downvoteCount={post.downvoteCount}
                     commentCount={0}
                     postHref={post.id}
+                    isDisliked={null}
+                    isLiked={null}
                   />
                 );
               })}
