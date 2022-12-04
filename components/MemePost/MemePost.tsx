@@ -2,6 +2,8 @@ import Image from "next/image";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/outline";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
+import { handlePostVote } from "../../utils/handlePostVote";
+import { useEffect, useState } from "react";
 
 type MemePostProps = {
   userAvatarURL: string;
@@ -12,6 +14,7 @@ type MemePostProps = {
   downvoteCount: number;
   commentCount: number;
   postHref: number;
+  liked: boolean | null;
 };
 
 const MemePost = ({
@@ -23,7 +26,47 @@ const MemePost = ({
   downvoteCount,
   commentCount,
   postHref,
+  liked,
 }: MemePostProps) => {
+  const [upvoteCountState, setUpvoteCountState] = useState(0);
+  const [downvoteCountState, setDownvoteCountState] = useState(0);
+  const [likedState, setIsLikedState] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (downvoteCount) setDownvoteCountState(downvoteCount);
+    if (upvoteCount) setUpvoteCountState(upvoteCount);
+    if (liked !== undefined) setIsLikedState(liked);
+  }, [downvoteCount, upvoteCount, liked]);
+
+  const handleUpvote = () => {
+    if (likedState === false) {
+      handlePostVote({ liked: false, side: true, postId: postHref });
+      setUpvoteCountState(upvoteCountState + 1);
+      setDownvoteCountState(downvoteCountState - 1);
+      setIsLikedState(true);
+    } else if (likedState === null) {
+      handlePostVote({ liked: null, side: true, postId: postHref });
+      setUpvoteCountState(upvoteCountState + 1);
+      setIsLikedState(true);
+    }
+  };
+  const handleDownvote = () => {
+    if (likedState === true) {
+      handlePostVote({ liked: true, side: false, postId: postHref });
+      setDownvoteCountState(downvoteCountState + 1);
+      setUpvoteCountState(upvoteCountState - 1);
+      setIsLikedState(false);
+    } else if (likedState === null) {
+      handlePostVote({ liked: null, side: false, postId: postHref });
+      setDownvoteCountState(downvoteCountState + 1);
+      setIsLikedState(false);
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log(likedState);
+  // }, [likedState]);
+
   return (
     <div className="flex flex-col items-center gap-1 w-fit py-5 border-b-2">
       <div className="flex items-center gap-2 text-left w-full text-sm">
@@ -46,14 +89,28 @@ const MemePost = ({
       </Link>
       <div className="flex gap-4 w-full mt-2">
         {/* upvote button */}
-        <button className={"meme-control-button"}>
+        <button
+          onClick={handleUpvote}
+          className={`${
+            likedState === true
+              ? "meme-control-button bg-green-200"
+              : "meme-control-button"
+          }`}
+        >
           <ArrowUpIcon className="h-4 w-4 text-blue-500" />
-          <div>{upvoteCount}</div>
+          <div>{upvoteCountState}</div>
         </button>
         {/* downvote button */}
-        <button className={"meme-control-button"}>
+        <button
+          onClick={handleDownvote}
+          className={`${
+            likedState === false
+              ? "meme-control-button bg-red-200"
+              : "meme-control-button "
+          }`}
+        >
           <ArrowDownIcon className="h-4 w-4 text-blue-500" />
-          <div>{downvoteCount}</div>
+          <div>{downvoteCountState}</div>
         </button>
       </div>
     </div>

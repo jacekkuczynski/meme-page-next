@@ -12,7 +12,7 @@ export const handleAddComment = async (
   return axios
     .post("/api/createNewComment/createNewComment", uploadedCommentData)
     .then((res) => {
-      return res.data.newPost;
+      return res.data.newComment;
     })
     .catch((err) => {
       console.log("something went wrong...", err);

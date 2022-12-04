@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    return await createNewComment(req, res);
+    return await downVoteFromNull(req, res);
   } else {
     return res
       .status(405)
@@ -11,20 +11,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const createNewComment = async (req: NextApiRequest, res: NextApiResponse) => {
+const downVoteFromNull = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;
   try {
-    const newComment = await prisma.comment.create({
+    const newDownvote = await prisma.post.update({
+      where: { id: body.postId },
       data: {
-        postId: body.postId,
-        username: body.username,
-        commentContent: body.commentContent,
+        downvoteCount: {
+          increment: 1,
+        },
       },
     });
-    return res.status(200).json({ createNewComment, succes: true, newComment });
+    return res.status(200).json({ downVoteFromNull, succes: true });
   } catch (error) {
     console.error("Request error", error);
-    res.status(500).json({ error: "error creating post", succes: false });
+    res.status(500).json({ error: "error during voting", succes: false });
   }
 };
 
