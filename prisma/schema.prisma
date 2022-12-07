@@ -48,12 +48,11 @@ model User {
 }
 
 model VotesByUser {
-  Post       Post    @relation(fields: [postId], references: [id])
-  postId     Int
-  User       User    @relation(fields: [userEmail], references: [userEmail])
-  userEmail  String
-  isLiked    Boolean
-  isDisliked Boolean
+  Post      Post    @relation(fields: [postId], references: [id])
+  postId    Int
+  User      User    @relation(fields: [userEmail], references: [userEmail])
+  userEmail String
+  isLiked   Boolean
 
   @@id([postId, userEmail])
   @@unique([postId, userEmail])

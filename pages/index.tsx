@@ -9,6 +9,7 @@ import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Navbar from "../components/Navbar/Navbar";
 import { handleFindPostsWithVotes } from "../utils/handleFindPostsWithVotes";
 import { handleGetPostsToDisplay } from "../utils/handleGetPostsToDisplay";
+import { handleGetPostsToDisplayWithUser } from "../utils/handleGetPostsToDisplayWithUser";
 // import Profile from "../components/Profile/Profile";
 import { prisma } from "./api";
 
@@ -30,32 +31,15 @@ type _count = {
   comments: number;
 };
 
-// { posts }: { posts: post[] }
-
 export default function Home() {
   const [postsData, setPostsData] = useState<post[] | null>(null);
   const { user } = useUser();
 
   useEffect(() => {
     if (user) {
-      handleGetPostsToDisplay()
-        .then((res) => {
-          return res;
-        })
-        .then((res) => {
-          const postIds = res.map((post: any) => {
-            return post.id;
-          });
-          const postData = res;
-          const userEmail = user.email;
-          handleFindPostsWithVotes({ postIds, userEmail }).then((res) => {
-            const postDataWithVotes = postData.map((post: any) => ({
-              ...post,
-              ...res.find((el: any) => el.id === post.id),
-            }));
-            setPostsData(postDataWithVotes);
-          });
-        });
+      handleGetPostsToDisplayWithUser().then((res) => {
+        console.log(res);
+      });
     } else {
       handleGetPostsToDisplay().then((res) => {
         setPostsData(res);
@@ -102,3 +86,22 @@ export default function Home() {
     </>
   );
 }
+
+// handleGetPostsToDisplay()
+//   .then((res) => {
+//     return res;
+//   })
+//   .then((res) => {
+//     const postIds = res.map((post: any) => {
+//       return post.id;
+//     });
+//     const postData = res;
+//     const userEmail = user.email;
+//     handleFindPostsWithVotes({ postIds, userEmail }).then((res) => {
+//       const postDataWithVotes = postData.map((post: any) => ({
+//         ...post,
+//         ...res.find((el: any) => el.id === post.id),
+//       }));
+//       setPostsData(postDataWithVotes);
+//     });
+//   });
