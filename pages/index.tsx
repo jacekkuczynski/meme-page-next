@@ -2,13 +2,13 @@ import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import MemePost from "../components/MemePost/MemePost";
-
 import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Navbar from "../components/Navbar/Navbar";
+import { handleGetPostsToDisplay } from "../utils/handleGetPostsToDisplay";
+import { handleGetPostsToDisplayWithUser } from "../utils/handleGetPostsToDisplayWithUser";
 // import Profile from "../components/Profile/Profile";
-import { prisma } from "./api";
 
-type post = {
+export type post = {
   createdAt: string;
   downvoteCount: number;
   fileURL: string;
@@ -18,20 +18,29 @@ type post = {
   updatedAt: string;
   userAvatarURL: string;
   username: string;
+  liked?: boolean | null;
+  commentCount: number;
 };
-
-export default function Home({ posts }: { posts: post[] }) {
-  const [postsData, setPostsData] = useState<post[]>([]);
+export default function Home() {
+  const [postsData, setPostsData] = useState<post[] | null>(null);
   const { user } = useUser();
 
   useEffect(() => {
-    if (user) {
-      setPostsData(posts);
-      console.log(posts);
-    } else {
-      setPostsData(posts);
-    }
-  }, [user, posts]);
+    const handleLoad = async () => {
+      if (user) {
+        handleGetPostsToDisplayWithUser(user.email).then((res) => {
+          setPostsData(res);
+        });
+      } else {
+        handleGetPostsToDisplay().then((res) => {
+          setPostsData(res);
+        });
+      }
+    };
+    handleLoad();
+  }, [user]);
+
+
   return (
     <>
       <Head>
@@ -59,9 +68,9 @@ export default function Home({ posts }: { posts: post[] }) {
                     fileURL={post.fileURL}
                     upvoteCount={post.upvoteCount}
                     downvoteCount={post.downvoteCount}
-                    commentCount={0}
+                    commentCount={post.commentCount}
                     postHref={post.id}
-                    liked={true}
+                    liked={post.liked}
                   />
                 );
               })}
@@ -71,9 +80,3 @@ export default function Home({ posts }: { posts: post[] }) {
     </>
   );
 }
-
-export const getServerSideProps = async () => {
-  const data = await prisma.post.findMany({ take: 20 });
-  const posts = JSON.parse(JSON.stringify(data));
-  return { props: { posts } };
-};

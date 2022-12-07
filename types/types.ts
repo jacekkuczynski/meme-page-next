@@ -1,16 +1,19 @@
 export type PostType = { postData: postData; commentsData?: commentType[] };
 
-type postData = {
-  createdAt: string;
-  downvoteCount: number;
-  fileURL: string;
+export type postData = {
   id: number;
-  memeTitle: string;
-  updatedAt: string;
   upvoteCount: number;
-  userAvatarURL: string;
-  username: string;
+  downvoteCount: number;
   comments: string[];
+  memeTitle: string;
+  fileURL: string;
+  username: string;
+  userAvatarURL: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  User: string;
+  VotesByUser: string[];
 };
 
 export type commentType = {

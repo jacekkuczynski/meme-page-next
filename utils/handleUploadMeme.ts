@@ -7,6 +7,7 @@ type uploadedPostDataType = {
   fileURL: string;
   username: string;
   userAvatarURL: string;
+  liked: boolean | null;
 };
 
 export const handleUploadMemeDataToDb = async (

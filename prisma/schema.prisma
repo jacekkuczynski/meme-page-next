@@ -42,21 +42,22 @@ model Comment {
 
 model User {
   id          Int           @id @default(autoincrement())
-  userEmail   String
+
+  userEmail   String        @unique
   Posts       Post[]
   VotesByUser VotesByUser[]
 }
 
 model VotesByUser {
-  Post       Post    @relation(fields: [postId], references: [id])
-  postId     Int
-  User       User    @relation(fields: [userId], references: [id])
-  userId     Int
-  isLiked    Boolean
-  isDisliked Boolean
-  isDeleted  Boolean
+  Post      Post    @relation(fields: [postId], references: [id])
+  postId    Int
+  User      User    @relation(fields: [userEmail], references: [userEmail])
+  userEmail String
+  isLiked   Boolean
 
-  @@id([postId, userId])
-  @@index([userId])
+  @@id([postId, userEmail])
+  @@unique([postId, userEmail])
+  @@index([userEmail])
+
   @@index([postId])
 }

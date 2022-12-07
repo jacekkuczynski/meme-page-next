@@ -28,10 +28,21 @@ const downVoteFromUpVote = async (
         },
       },
     });
+    const addPostToUserVotes = await prisma.votesByUser.update({
+      where: {
+        postId_userEmail: { postId: body.postId, userEmail: body.userEmail },
+      },
+      data: {
+        isLiked: false,
+      },
+    });
     return res.status(200).json({ downVoteFromUpVote, succes: true });
   } catch (error) {
     console.error("Request error", error);
-    res.status(500).json({ error: "error during voting", succes: false });
+    res
+      .status(500)
+      .json({ error: "error during downVoteFromUpVote", succes: false });
+
   }
 };
 

@@ -38,6 +38,7 @@ const PostID = ({ post }: PostPageI) => {
               downvoteCount={postData.downvoteCount}
               commentCount={commentsData!.length}
               postHref={postData.id}
+              liked={null}
             />
             {commentsData ? (
               <CommentsSection
