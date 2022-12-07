@@ -1,10 +1,13 @@
 import { useUser } from "@auth0/nextjs-auth0";
+import { resolveSoa } from "dns";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import MemePost from "../components/MemePost/MemePost";
 
 import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Navbar from "../components/Navbar/Navbar";
+import { handleFIndPostsWithVotes } from "../utils/handleFIndPostsWithVotes";
+import { handleGetPostsToDisplay } from "../utils/handleGetPostsToDisplay";
 // import Profile from "../components/Profile/Profile";
 import { prisma } from "./api";
 
@@ -28,13 +31,34 @@ export default function Home({ posts }: { posts: post[] }) {
   // console.log(posts);
 
   useEffect(() => {
-    if (user) {
+    if (user?.email) {
+      handleGetPostsToDisplay().then((res) => {
+        setPostsData(res);
+        console.log(res, "res");
+      });
+
+      const postsIds = posts.map((post) => {
+        return post.id;
+      });
+      // console.log(posts);
+      const userEmail = user.email;
+      handleFIndPostsWithVotes({ postsIds, userEmail }).then((res) => {
+        console.log(res);
+
+        console.log(
+          posts.map((post, index) => {
+            return res.find((el) => {
+              return post.id === el.id;
+            });
+          })
+        );
+        setPostsData(
+          posts.map((post, index) => {
+            return { ...post, ...res[index] };
+          })
+        );
+      });
       setPostsData(posts);
-      console.log(
-        posts.forEach((post) => {
-          console.log(post);
-        })
-      );
     } else {
       posts.forEach((post) => {
         post.liked = null;
