@@ -1,17 +1,18 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import { resolveSoa } from "dns";
 import Head from "next/head";
+import { off } from "process";
 import { useEffect, useState } from "react";
 import MemePost from "../components/MemePost/MemePost";
 
 import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Navbar from "../components/Navbar/Navbar";
-import { handleFIndPostsWithVotes } from "../utils/handleFIndPostsWithVotes";
+import { handleFindPostsWithVotes } from "../utils/handleFindPostsWithVotes";
 import { handleGetPostsToDisplay } from "../utils/handleGetPostsToDisplay";
 // import Profile from "../components/Profile/Profile";
 import { prisma } from "./api";
 
-type post = {
+export type post = {
   createdAt: string;
   downvoteCount: number;
   fileURL: string;
@@ -21,51 +22,52 @@ type post = {
   updatedAt: string;
   userAvatarURL: string;
   username: string;
-  liked: boolean | null;
+  liked?: boolean | null;
 };
 
-export default function Home({ posts }: { posts: post[] }) {
-  const [postsData, setPostsData] = useState<post[]>([]);
+// { posts }: { posts: post[] }
+
+export default function Home() {
+  const [postsData, setPostsData] = useState<post[] | null>(null);
+  const [postIds, setPostsIds] = useState<number[]>([]);
   const { user } = useUser();
 
-  // console.log(posts);
-
   useEffect(() => {
-    if (user?.email) {
+    if (user) {
+      handleGetPostsToDisplay()
+        .then((res) => {
+          return res;
+          setPostsData(res);
+          return res.map((post: any) => {
+            return post.id;
+          });
+        })
+        .then((res) => {
+          const postIds = res.map((post: any) => {
+            return post.id;
+          });
+          const postData = res;
+          console.log(postIds, "postIds");
+          const userEmail = user.email;
+          handleFindPostsWithVotes({ postIds, userEmail }).then((res) => {
+            const postDataWithVotes = postData.map((post: any) => ({
+              ...post,
+              ...res.find((el: any) => el.id === post.id),
+            }));
+            setPostsData(postDataWithVotes);
+          });
+        });
+    } else {
       handleGetPostsToDisplay().then((res) => {
         setPostsData(res);
-        console.log(res, "res");
       });
-
-      const postsIds = posts.map((post) => {
-        return post.id;
-      });
-      // console.log(posts);
-      const userEmail = user.email;
-      handleFIndPostsWithVotes({ postsIds, userEmail }).then((res) => {
-        console.log(res);
-
-        console.log(
-          posts.map((post, index) => {
-            return res.find((el) => {
-              return post.id === el.id;
-            });
-          })
-        );
-        setPostsData(
-          posts.map((post, index) => {
-            return { ...post, ...res[index] };
-          })
-        );
-      });
-      setPostsData(posts);
-    } else {
-      posts.forEach((post) => {
-        post.liked = null;
-      });
-      setPostsData(posts);
     }
-  }, [user, posts]);
+  }, [user]);
+
+  useEffect(() => {
+    console.log(postsData);
+  }, [postsData]);
+
   return (
     <>
       <Head>
@@ -106,8 +108,43 @@ export default function Home({ posts }: { posts: post[] }) {
   );
 }
 
-export const getServerSideProps = async () => {
-  const data = await prisma.post.findMany({ take: 20 });
-  const posts = JSON.parse(JSON.stringify(data));
-  return { props: { posts } };
-};
+// export const getServerSideProps = async () => {
+//   const data = await prisma.post.findMany({ take: 20 });
+//   const posts = JSON.parse(JSON.stringify(data));
+//   return { props: { posts } };
+// };
+
+// useEffect(() => {
+//   if (user?.email) {
+//     handleGetPostsToDisplay()
+//       .then((res) => {
+//         setPostsIds(
+//           res.map((post) => {
+//             return post.id;
+//           })
+//         );
+//         setPostsData(res);
+//       })
+//       .then(() => {
+//         const userEmail = user.email;
+//         handleFindPostsWithVotes({ postIds, userEmail }).then((res) => {
+//           console.log(
+//             postsData.map((postsData) => ({
+//               ...postsData,
+//               ...res.find((res) => res.id === postsData.id),
+//             }))
+//           );
+//           setPostsData(
+//             postsData.map((postsData) => ({
+//               ...postsData,
+//               ...res.find((res) => res.id === postsData.id),
+//             }))
+//           );
+//         });
+//       });
+//   } else {
+//     handleGetPostsToDisplay().then((res) => {
+//       setPostsData(res);
+//     });
+//   }
+// }, [user]);

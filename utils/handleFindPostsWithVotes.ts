@@ -1,22 +1,37 @@
 import axios from "axios";
 
 interface findPostsWithVotesI {
-  postsIds: number[];
-  userEmail: string;
+  postIds: number[];
+  userEmail: string | null | undefined;
 }
+
+type post = {
+  createdAt: string;
+  downvoteCount: number;
+  fileURL: string;
+  id: number;
+  memeTitle: string;
+  upvoteCount: number;
+  updatedAt: string;
+  userAvatarURL: string;
+  username: string;
+  liked: boolean | null;
+};
 
 type postTypeWithLike = {
   isDisliked: boolean;
   isLiked: boolean;
   postId: number;
   userEmail: string;
+  post: post[];
 };
 
-export const handleFIndPostsWithVotes = async (
+export const handleFindPostsWithVotes = async (
   findPostsWithVotesData: findPostsWithVotesI
 ) => {
   return axios
-    .post("/api/findPostsWithVotes/findPostsWithVotes", findPostsWithVotesData)
+
+    .get("/api/findPostsWithVotes/findPostsWithVotes")
     .then((res) => {
       return res.data.postsWithVotes.map((post: postTypeWithLike) => {
         if (post.isLiked === true) {

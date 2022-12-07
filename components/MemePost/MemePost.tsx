@@ -15,7 +15,7 @@ type MemePostProps = {
   downvoteCount: number;
   commentCount: number;
   postHref: number;
-  liked: boolean | null;
+  liked?: boolean | null;
 };
 
 const MemePost = ({
@@ -42,10 +42,6 @@ const MemePost = ({
   }, [user]);
 
   useEffect(() => {
-    console.log(userEmail);
-  }, [userEmail]);
-
-  useEffect(() => {
     if (downvoteCount) setDownvoteCountState(downvoteCount);
     if (upvoteCount) setUpvoteCountState(upvoteCount);
     if (liked !== undefined) setIsLikedState(liked);
@@ -64,7 +60,6 @@ const MemePost = ({
         setDownvoteCountState(downvoteCountState - 1);
         setIsLikedState(true);
       } else if (likedState === null) {
-        console.log("handleUpvote");
         handlePostVote({
           liked: null,
           side: true,
@@ -89,7 +84,6 @@ const MemePost = ({
         setUpvoteCountState(upvoteCountState - 1);
         setIsLikedState(false);
       } else if (likedState === null) {
-        console.log("handleDownVote");
         handlePostVote({
           liked: null,
           side: false,
@@ -101,10 +95,6 @@ const MemePost = ({
       }
     }
   };
-
-  // useEffect(() => {
-  //   console.log(likedState);
-  // }, [likedState]);
 
   return (
     <div className="flex flex-col items-center gap-1 w-fit py-5 border-b-2">
