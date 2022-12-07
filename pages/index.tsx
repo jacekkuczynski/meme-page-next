@@ -2,13 +2,11 @@ import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import MemePost from "../components/MemePost/MemePost";
-
 import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Navbar from "../components/Navbar/Navbar";
 import { handleGetPostsToDisplay } from "../utils/handleGetPostsToDisplay";
 import { handleGetPostsToDisplayWithUser } from "../utils/handleGetPostsToDisplayWithUser";
 // import Profile from "../components/Profile/Profile";
-import { prisma } from "./api";
 
 export type post = {
   createdAt: string;
@@ -21,11 +19,7 @@ export type post = {
   userAvatarURL: string;
   username: string;
   liked?: boolean | null;
-  _count: _count;
-};
-
-type _count = {
-  comments: number;
+  commentCount: number;
 };
 
 export default function Home() {
@@ -33,15 +27,18 @@ export default function Home() {
   const { user } = useUser();
 
   useEffect(() => {
-    if (user) {
-      handleGetPostsToDisplayWithUser().then((res) => {
-        console.log(res);
-      });
-    } else {
-      handleGetPostsToDisplay().then((res) => {
-        setPostsData(res);
-      });
-    }
+    const handleLoad = async () => {
+      if (user) {
+        handleGetPostsToDisplayWithUser(user.email).then((res) => {
+          setPostsData(res);
+        });
+      } else {
+        handleGetPostsToDisplay().then((res) => {
+          setPostsData(res);
+        });
+      }
+    };
+    handleLoad();
   }, [user]);
 
   return (
@@ -71,7 +68,7 @@ export default function Home() {
                     fileURL={post.fileURL}
                     upvoteCount={post.upvoteCount}
                     downvoteCount={post.downvoteCount}
-                    commentCount={post._count.comments}
+                    commentCount={post.commentCount}
                     postHref={post.id}
                     liked={post.liked}
                   />

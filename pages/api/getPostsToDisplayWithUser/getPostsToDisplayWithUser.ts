@@ -19,8 +19,18 @@ const getPostsToDisplayWithUser = async (
   try {
     const postsToDisplayWithUser = await prisma.post.findMany({
       take: 20,
+      where: {
+        VotesByUser: {
+          every: { userEmail: { equals: body.userEmail } },
+        },
+      },
       include: {
-        VotesByUser: true,
+        VotesByUser: {
+          select: { isLiked: true },
+        },
+        _count: {
+          select: { comments: true },
+        },
       },
     });
     return res.status(200).json({
