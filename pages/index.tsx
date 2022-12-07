@@ -29,7 +29,6 @@ export type post = {
 
 export default function Home() {
   const [postsData, setPostsData] = useState<post[] | null>(null);
-  const [postIds, setPostsIds] = useState<number[]>([]);
   const { user } = useUser();
 
   useEffect(() => {
@@ -37,10 +36,6 @@ export default function Home() {
       handleGetPostsToDisplay()
         .then((res) => {
           return res;
-          setPostsData(res);
-          return res.map((post: any) => {
-            return post.id;
-          });
         })
         .then((res) => {
           const postIds = res.map((post: any) => {
@@ -63,10 +58,6 @@ export default function Home() {
       });
     }
   }, [user]);
-
-  useEffect(() => {
-    console.log(postsData);
-  }, [postsData]);
 
   return (
     <>
@@ -107,44 +98,3 @@ export default function Home() {
     </>
   );
 }
-
-// export const getServerSideProps = async () => {
-//   const data = await prisma.post.findMany({ take: 20 });
-//   const posts = JSON.parse(JSON.stringify(data));
-//   return { props: { posts } };
-// };
-
-// useEffect(() => {
-//   if (user?.email) {
-//     handleGetPostsToDisplay()
-//       .then((res) => {
-//         setPostsIds(
-//           res.map((post) => {
-//             return post.id;
-//           })
-//         );
-//         setPostsData(res);
-//       })
-//       .then(() => {
-//         const userEmail = user.email;
-//         handleFindPostsWithVotes({ postIds, userEmail }).then((res) => {
-//           console.log(
-//             postsData.map((postsData) => ({
-//               ...postsData,
-//               ...res.find((res) => res.id === postsData.id),
-//             }))
-//           );
-//           setPostsData(
-//             postsData.map((postsData) => ({
-//               ...postsData,
-//               ...res.find((res) => res.id === postsData.id),
-//             }))
-//           );
-//         });
-//       });
-//   } else {
-//     handleGetPostsToDisplay().then((res) => {
-//       setPostsData(res);
-//     });
-//   }
-// }, [user]);
