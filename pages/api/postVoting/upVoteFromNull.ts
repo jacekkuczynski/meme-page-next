@@ -35,6 +35,7 @@ const upVoteFromNull = async (req: NextApiRequest, res: NextApiResponse) => {
     res
       .status(500)
       .json({ error: "error during upVoteFromNull", succes: false });
+
   }
 };
 

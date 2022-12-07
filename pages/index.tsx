@@ -21,7 +21,6 @@ export type post = {
   liked?: boolean | null;
   commentCount: number;
 };
-
 export default function Home() {
   const [postsData, setPostsData] = useState<post[] | null>(null);
   const { user } = useUser();
@@ -40,6 +39,7 @@ export default function Home() {
     };
     handleLoad();
   }, [user]);
+
 
   return (
     <>

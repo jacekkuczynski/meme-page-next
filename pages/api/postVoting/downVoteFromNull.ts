@@ -35,6 +35,7 @@ const downVoteFromNull = async (req: NextApiRequest, res: NextApiResponse) => {
     res
       .status(500)
       .json({ error: "error during downVoteFromNull", succes: false });
+
   }
 };
 

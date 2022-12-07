@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import VoteButtons from "./VoteButtons";
 
+
 type MemePostProps = {
   userAvatarURL: string;
   username: string;
@@ -15,8 +16,9 @@ type MemePostProps = {
   downvoteCount: number;
   commentCount: number;
   postHref: number;
+
   liked?: boolean | null;
-};
+
 
 const MemePost = ({
   userAvatarURL,
@@ -79,6 +81,7 @@ const MemePost = ({
             <div>{commentCount}</div>
           </button>
         </Link>
+
       </div>
     </div>
   );

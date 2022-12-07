@@ -4,7 +4,6 @@ interface handlePostVoteI {
   liked: boolean | null;
   postId: number;
   userEmail: string;
-  side: boolean;
 }
 
 export const handlePostVote = async ({
@@ -36,7 +35,9 @@ export const handlePostVote = async ({
       });
   } else if (liked === null && side === false) {
     axios
+
       .post("/api/postVoting/downVoteFromNull", { postId, userEmail })
+
       .then((res) => {})
       .catch((err) => {
         console.log("something went wrong...", err);

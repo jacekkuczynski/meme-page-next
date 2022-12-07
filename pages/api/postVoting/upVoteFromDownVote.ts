@@ -44,6 +44,7 @@ const upVoteFromDownVote = async (
     res
       .status(500)
       .json({ error: "error during upVoteFromDownVote", succes: false });
+
   }
 };
 

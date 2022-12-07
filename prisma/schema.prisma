@@ -42,6 +42,7 @@ model Comment {
 
 model User {
   id          Int           @id @default(autoincrement())
+
   userEmail   String        @unique
   Posts       Post[]
   VotesByUser VotesByUser[]
@@ -57,5 +58,6 @@ model VotesByUser {
   @@id([postId, userEmail])
   @@unique([postId, userEmail])
   @@index([userEmail])
+
   @@index([postId])
 }
