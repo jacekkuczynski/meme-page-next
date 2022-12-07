@@ -22,10 +22,20 @@ const upVoteFromNull = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       },
     });
+    const addPostToUserVotes = await prisma.votesByUser.create({
+      data: {
+        postId: body.postId,
+        userEmail: body.userEmail,
+        isLiked: true,
+        isDisliked: false,
+      },
+    });
     return res.status(200).json({ upVoteFromNull, succes: true });
   } catch (error) {
     console.error("Request error", error);
-    res.status(500).json({ error: "error during voting", succes: false });
+    res
+      .status(500)
+      .json({ error: "error during upVoteFromNull", succes: false });
   }
 };
 

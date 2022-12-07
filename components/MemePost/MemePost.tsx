@@ -4,6 +4,7 @@ import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
 import { handlePostVote } from "../../utils/handlePostVote";
 import { useEffect, useState } from "react";
+import { useUser } from "@auth0/nextjs-auth0";
 
 type MemePostProps = {
   userAvatarURL: string;
@@ -31,6 +32,18 @@ const MemePost = ({
   const [upvoteCountState, setUpvoteCountState] = useState(0);
   const [downvoteCountState, setDownvoteCountState] = useState(0);
   const [likedState, setIsLikedState] = useState<boolean | null>(null);
+  const [userEmail, setUserEmail] = useState<null | string>(null);
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (user?.email) {
+      setUserEmail(user.email);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    console.log(userEmail);
+  }, [userEmail]);
 
   useEffect(() => {
     if (downvoteCount) setDownvoteCountState(downvoteCount);
@@ -39,27 +52,53 @@ const MemePost = ({
   }, [downvoteCount, upvoteCount, liked]);
 
   const handleUpvote = () => {
-    if (likedState === false) {
-      handlePostVote({ liked: false, side: true, postId: postHref });
-      setUpvoteCountState(upvoteCountState + 1);
-      setDownvoteCountState(downvoteCountState - 1);
-      setIsLikedState(true);
-    } else if (likedState === null) {
-      handlePostVote({ liked: null, side: true, postId: postHref });
-      setUpvoteCountState(upvoteCountState + 1);
-      setIsLikedState(true);
+    if (userEmail) {
+      if (likedState === false) {
+        handlePostVote({
+          liked: false,
+          side: true,
+          postId: postHref,
+          userEmail: userEmail,
+        });
+        setUpvoteCountState(upvoteCountState + 1);
+        setDownvoteCountState(downvoteCountState - 1);
+        setIsLikedState(true);
+      } else if (likedState === null) {
+        console.log("handleUpvote");
+        handlePostVote({
+          liked: null,
+          side: true,
+          postId: postHref,
+          userEmail: userEmail,
+        });
+        setUpvoteCountState(upvoteCountState + 1);
+        setIsLikedState(true);
+      }
     }
   };
   const handleDownvote = () => {
-    if (likedState === true) {
-      handlePostVote({ liked: true, side: false, postId: postHref });
-      setDownvoteCountState(downvoteCountState + 1);
-      setUpvoteCountState(upvoteCountState - 1);
-      setIsLikedState(false);
-    } else if (likedState === null) {
-      handlePostVote({ liked: null, side: false, postId: postHref });
-      setDownvoteCountState(downvoteCountState + 1);
-      setIsLikedState(false);
+    if (userEmail) {
+      if (likedState === true) {
+        handlePostVote({
+          liked: true,
+          side: false,
+          postId: postHref,
+          userEmail: userEmail,
+        });
+        setDownvoteCountState(downvoteCountState + 1);
+        setUpvoteCountState(upvoteCountState - 1);
+        setIsLikedState(false);
+      } else if (likedState === null) {
+        console.log("handleDownVote");
+        handlePostVote({
+          liked: null,
+          side: false,
+          postId: postHref,
+          userEmail: userEmail,
+        });
+        setDownvoteCountState(downvoteCountState + 1);
+        setIsLikedState(false);
+      }
     }
   };
 

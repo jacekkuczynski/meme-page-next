@@ -63,6 +63,7 @@ const UploadMemeForm = ({ userNickname }: UploadMemeFormProps) => {
               fileURL: url,
               username: userNickname,
               userAvatarURL: "",
+              liked: null,
             }).then((res) => {
               window.location.replace(`/post/${res.id}`);
             });

@@ -18,17 +18,27 @@ type post = {
   updatedAt: string;
   userAvatarURL: string;
   username: string;
+  liked: boolean | null;
 };
 
 export default function Home({ posts }: { posts: post[] }) {
   const [postsData, setPostsData] = useState<post[]>([]);
   const { user } = useUser();
 
+  // console.log(posts);
+
   useEffect(() => {
     if (user) {
       setPostsData(posts);
-      console.log(posts);
+      console.log(
+        posts.forEach((post) => {
+          console.log(post);
+        })
+      );
     } else {
+      posts.forEach((post) => {
+        post.liked = null;
+      });
       setPostsData(posts);
     }
   }, [user, posts]);
@@ -61,7 +71,7 @@ export default function Home({ posts }: { posts: post[] }) {
                     downvoteCount={post.downvoteCount}
                     commentCount={0}
                     postHref={post.id}
-                    liked={true}
+                    liked={post.liked}
                   />
                 );
               })}
