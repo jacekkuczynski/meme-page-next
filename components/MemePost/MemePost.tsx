@@ -1,10 +1,15 @@
 import Image from "next/image";
-import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUpIcon,
+  ArrowDownIcon,
+  ChatBubbleLeftIcon,
+} from "@heroicons/react/24/outline";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
 import { handlePostVote } from "../../utils/handlePostVote";
 import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
+import toast from "react-hot-toast";
 
 type MemePostProps = {
   userAvatarURL: string;
@@ -69,6 +74,10 @@ const MemePost = ({
         setUpvoteCountState(upvoteCountState + 1);
         setIsLikedState(true);
       }
+    } else {
+      toast("You need to login or register to vote!", {
+        icon: "🚀",
+      });
     }
   };
   const handleDownvote = () => {
@@ -93,6 +102,10 @@ const MemePost = ({
         setDownvoteCountState(downvoteCountState + 1);
         setIsLikedState(false);
       }
+    } else {
+      toast("You need to login or register to vote!", {
+        icon: "🚀",
+      });
     }
   };
 
@@ -141,9 +154,12 @@ const MemePost = ({
           <ArrowDownIcon className="h-4 w-4 text-blue-500" />
           <div>{downvoteCountState}</div>
         </button>
-        <button onClick={handleDownvote} className="meme-control-button">
-          <div>{commentCount}</div>
-        </button>
+        <Link href={`/post/${postHref}`}>
+          <button onClick={handleDownvote} className="meme-control-button">
+            <ChatBubbleLeftIcon className="h-4 w-4 text-blue-500" />
+            <div>{commentCount}</div>
+          </button>
+        </Link>
       </div>
     </div>
   );
