@@ -141,6 +141,9 @@ const MemePost = ({
           <ArrowDownIcon className="h-4 w-4 text-blue-500" />
           <div>{downvoteCountState}</div>
         </button>
+        <button onClick={handleDownvote} className="meme-control-button">
+          <div>{commentCount}</div>
+        </button>
       </div>
     </div>
   );

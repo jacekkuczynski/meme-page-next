@@ -14,7 +14,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 const getPostsToDisplay = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;
   try {
-    const postsToDisplay = await prisma.post.findMany({ take: 20 });
+    const postsToDisplay = await prisma.post.findMany({
+      take: 20,
+      include: {
+        _count: {
+          select: { comments: true },
+        },
+      },
+    });
     return res
       .status(200)
       .json({ getPostsToDisplay, succes: true, postsToDisplay });

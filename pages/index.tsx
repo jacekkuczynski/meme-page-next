@@ -23,6 +23,11 @@ export type post = {
   userAvatarURL: string;
   username: string;
   liked?: boolean | null;
+  _count: _count;
+};
+
+type _count = {
+  comments: number;
 };
 
 // { posts }: { posts: post[] }
@@ -42,7 +47,6 @@ export default function Home() {
             return post.id;
           });
           const postData = res;
-          console.log(postIds, "postIds");
           const userEmail = user.email;
           handleFindPostsWithVotes({ postIds, userEmail }).then((res) => {
             const postDataWithVotes = postData.map((post: any) => ({
@@ -86,7 +90,7 @@ export default function Home() {
                     fileURL={post.fileURL}
                     upvoteCount={post.upvoteCount}
                     downvoteCount={post.downvoteCount}
-                    commentCount={0}
+                    commentCount={post._count.comments}
                     postHref={post.id}
                     liked={post.liked}
                   />
