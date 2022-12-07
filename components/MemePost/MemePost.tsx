@@ -1,15 +1,10 @@
 import Image from "next/image";
-import {
-  ArrowUpIcon,
-  ArrowDownIcon,
-  ChatBubbleLeftIcon,
-} from "@heroicons/react/24/outline";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
-import { handlePostVote } from "../../utils/handlePostVote";
 import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
-import toast from "react-hot-toast";
+import VoteButtons from "./VoteButtons";
 
 type MemePostProps = {
   userAvatarURL: string;
@@ -34,8 +29,6 @@ const MemePost = ({
   postHref,
   liked,
 }: MemePostProps) => {
-  const [upvoteCountState, setUpvoteCountState] = useState(0);
-  const [downvoteCountState, setDownvoteCountState] = useState(0);
   const [likedState, setIsLikedState] = useState<boolean | null>(null);
   const [userEmail, setUserEmail] = useState<null | string>(null);
   const { user } = useUser();
@@ -46,67 +39,8 @@ const MemePost = ({
     }
   }, [user]);
 
-  useEffect(() => {
-    if (downvoteCount) setDownvoteCountState(downvoteCount);
-    if (upvoteCount) setUpvoteCountState(upvoteCount);
-    if (liked !== undefined) setIsLikedState(liked);
-  }, [downvoteCount, upvoteCount, liked]);
-
-  const handleUpvote = () => {
-    if (userEmail) {
-      if (likedState === false) {
-        handlePostVote({
-          liked: false,
-          side: true,
-          postId: postHref,
-          userEmail: userEmail,
-        });
-        setUpvoteCountState(upvoteCountState + 1);
-        setDownvoteCountState(downvoteCountState - 1);
-        setIsLikedState(true);
-      } else if (likedState === null) {
-        handlePostVote({
-          liked: null,
-          side: true,
-          postId: postHref,
-          userEmail: userEmail,
-        });
-        setUpvoteCountState(upvoteCountState + 1);
-        setIsLikedState(true);
-      }
-    } else {
-      toast("You need to login or register to vote!", {
-        icon: "🚀",
-      });
-    }
-  };
-  const handleDownvote = () => {
-    if (userEmail) {
-      if (likedState === true) {
-        handlePostVote({
-          liked: true,
-          side: false,
-          postId: postHref,
-          userEmail: userEmail,
-        });
-        setDownvoteCountState(downvoteCountState + 1);
-        setUpvoteCountState(upvoteCountState - 1);
-        setIsLikedState(false);
-      } else if (likedState === null) {
-        handlePostVote({
-          liked: null,
-          side: false,
-          postId: postHref,
-          userEmail: userEmail,
-        });
-        setDownvoteCountState(downvoteCountState + 1);
-        setIsLikedState(false);
-      }
-    } else {
-      toast("You need to login or register to vote!", {
-        icon: "🚀",
-      });
-    }
+  const setIsLikedStateHandler = (data: boolean) => {
+    setIsLikedState(data);
   };
 
   return (
@@ -130,32 +64,17 @@ const MemePost = ({
         <Image src={fileURL} alt="meme about coding" width={500} height={500} />
       </Link>
       <div className="flex gap-4 w-full mt-2">
-        {/* upvote button */}
-        <button
-          onClick={handleUpvote}
-          className={`${
-            likedState === true
-              ? "meme-control-button bg-green-200"
-              : "meme-control-button"
-          }`}
-        >
-          <ArrowUpIcon className="h-4 w-4 text-blue-500" />
-          <div>{upvoteCountState}</div>
-        </button>
-        {/* downvote button */}
-        <button
-          onClick={handleDownvote}
-          className={`${
-            likedState === false
-              ? "meme-control-button bg-red-200"
-              : "meme-control-button "
-          }`}
-        >
-          <ArrowDownIcon className="h-4 w-4 text-blue-500" />
-          <div>{downvoteCountState}</div>
-        </button>
+        <VoteButtons
+          likedState={likedState}
+          userEmail={userEmail}
+          postHref={postHref}
+          setIsLikedState={setIsLikedStateHandler}
+          upvoteCount={upvoteCount}
+          downvoteCount={downvoteCount}
+          liked={liked}
+        />
         <Link href={`/post/${postHref}`}>
-          <button onClick={handleDownvote} className="meme-control-button">
+          <button className="meme-control-button">
             <ChatBubbleLeftIcon className="h-4 w-4 text-blue-500" />
             <div>{commentCount}</div>
           </button>
@@ -166,5 +85,3 @@ const MemePost = ({
 };
 
 export default MemePost;
-
-// meme-control-button--disabled
