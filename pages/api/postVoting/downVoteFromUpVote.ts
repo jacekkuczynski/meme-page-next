@@ -34,7 +34,6 @@ const downVoteFromUpVote = async (
       },
       data: {
         isLiked: false,
-        isDisliked: true,
       },
     });
     return res.status(200).json({ downVoteFromUpVote, succes: true });

@@ -1,13 +1,10 @@
 import { useUser } from "@auth0/nextjs-auth0";
-import { resolveSoa } from "dns";
 import Head from "next/head";
-import { off } from "process";
 import { useEffect, useState } from "react";
 import MemePost from "../components/MemePost/MemePost";
 
 import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Navbar from "../components/Navbar/Navbar";
-import { handleFindPostsWithVotes } from "../utils/handleFindPostsWithVotes";
 import { handleGetPostsToDisplay } from "../utils/handleGetPostsToDisplay";
 import { handleGetPostsToDisplayWithUser } from "../utils/handleGetPostsToDisplayWithUser";
 // import Profile from "../components/Profile/Profile";
@@ -86,22 +83,3 @@ export default function Home() {
     </>
   );
 }
-
-// handleGetPostsToDisplay()
-//   .then((res) => {
-//     return res;
-//   })
-//   .then((res) => {
-//     const postIds = res.map((post: any) => {
-//       return post.id;
-//     });
-//     const postData = res;
-//     const userEmail = user.email;
-//     handleFindPostsWithVotes({ postIds, userEmail }).then((res) => {
-//       const postDataWithVotes = postData.map((post: any) => ({
-//         ...post,
-//         ...res.find((el: any) => el.id === post.id),
-//       }));
-//       setPostsData(postDataWithVotes);
-//     });
-//   });

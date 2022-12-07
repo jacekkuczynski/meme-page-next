@@ -34,7 +34,6 @@ const upVoteFromDownVote = async (
       },
       data: {
         isLiked: true,
-        isDisliked: false,
       },
     });
     return res

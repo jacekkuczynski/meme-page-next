@@ -27,7 +27,6 @@ const upVoteFromNull = async (req: NextApiRequest, res: NextApiResponse) => {
         postId: body.postId,
         userEmail: body.userEmail,
         isLiked: true,
-        isDisliked: false,
       },
     });
     return res.status(200).json({ upVoteFromNull, succes: true });
