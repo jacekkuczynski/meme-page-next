@@ -1,6 +1,7 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 import MemePost from "../components/MemePost/MemePost";
 import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Navbar from "../components/Navbar/Navbar";
@@ -26,18 +27,15 @@ export default function Home() {
   const { user } = useUser();
 
   useEffect(() => {
-    const handleLoad = async () => {
-      if (user) {
-        handleGetPostsToDisplayWithUser(user.email).then((res) => {
-          setPostsData(res);
-        });
-      } else {
-        handleGetPostsToDisplay().then((res) => {
-          setPostsData(res);
-        });
-      }
-    };
-    handleLoad();
+    if (user) {
+      handleGetPostsToDisplayWithUser(user.email).then((res) => {
+        setPostsData(res);
+      });
+    } else {
+      handleGetPostsToDisplay().then((res) => {
+        setPostsData(res);
+      });
+    }
   }, [user]);
 
   return (
@@ -56,7 +54,7 @@ export default function Home() {
         <MemeStreamLayout>
           {/* <Profile /> */}
           <>
-            {postsData &&
+            {postsData ? (
               postsData.map((post: post, index: number) => {
                 return (
                   <MemePost
@@ -72,7 +70,10 @@ export default function Home() {
                     liked={post.liked}
                   />
                 );
-              })}
+              })
+            ) : (
+              <LoadingSpinner />
+            )}
           </>
         </MemeStreamLayout>
       </main>

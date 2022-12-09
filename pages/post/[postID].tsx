@@ -23,7 +23,6 @@ const PostID = ({ post }: PostPageI) => {
 
   useEffect(() => {
     const postID = router.query.postID;
-    console.log("trust me bro");
     if (user?.nickname && Number.isInteger(Number(postID))) {
       const userEmail = user.email;
       setUserState(user.nickname);
