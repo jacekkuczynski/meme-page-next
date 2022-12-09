@@ -6,6 +6,8 @@ import { PostType } from "../../types/types";
 import { useUser } from "@auth0/nextjs-auth0";
 import { useEffect, useState } from "react";
 import CommentsSection from "../../components/CommentsSection/CommentsSection";
+import { useRouter } from "next/router";
+import { handleGetVotesForPost } from "../../utils/handleGetVotesForPost";
 
 interface PostPageI {
   post: PostType | null;
@@ -14,14 +16,24 @@ interface PostPageI {
 const PostID = ({ post }: PostPageI) => {
   const { user } = useUser();
   const [userState, setUserState] = useState("");
+  const [isPostLiked, setIsPostLiked] = useState<null | boolean>(null);
   const postData = post?.postData;
   const commentsData = post?.commentsData;
+  const router = useRouter();
 
   useEffect(() => {
-    if (user?.nickname) {
+    const postID = router.query.postID;
+    console.log("trust me bro");
+    if (user?.nickname && Number.isInteger(Number(postID))) {
+      const userEmail = user.email;
       setUserState(user.nickname);
+      handleGetVotesForPost({ postID: Number(postID), userEmail }).then(
+        (res) => {
+          setIsPostLiked(res.isLiked);
+        }
+      );
     }
-  }, [user]);
+  }, [router.query.postID, user]);
 
   return (
     <>
@@ -38,7 +50,7 @@ const PostID = ({ post }: PostPageI) => {
               downvoteCount={postData.downvoteCount}
               commentCount={commentsData!.length}
               postHref={postData.id}
-              liked={null}
+              liked={isPostLiked}
             />
             {commentsData ? (
               <CommentsSection

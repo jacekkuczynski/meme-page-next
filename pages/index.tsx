@@ -40,7 +40,6 @@ export default function Home() {
     handleLoad();
   }, [user]);
 
-
   return (
     <>
       <Head>
