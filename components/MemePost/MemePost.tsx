@@ -27,6 +27,7 @@ const MemePost = ({
   downvoteCount,
   commentCount,
   postHref,
+
   liked,
 }: MemePostProps) => {
   const [likedState, setIsLikedState] = useState<boolean | null>(null);
@@ -59,10 +60,10 @@ const MemePost = ({
           <h4>{memeTitle}</h4>
         </Link>
       </div>
-      {/* meme */}
-      <Link href={`/post/${postHref}`}>
+      {/* meme */}{" "}
+      <a href={`/post/${postHref}`} target="_blank" rel="noreferrer">
         <Image src={fileURL} alt="meme about coding" width={500} height={500} />
-      </Link>
+      </a>
       <div className="flex gap-4 w-full mt-2">
         <VoteButtons
           likedState={likedState}
@@ -73,12 +74,12 @@ const MemePost = ({
           downvoteCount={downvoteCount}
           liked={liked}
         />
-        <Link href={`/post/${postHref}`}>
+        <a href={`/post/${postHref}`} target="_blank" rel="noreferrer">
           <button className="meme-control-button">
             <ChatBubbleLeftIcon className="h-4 w-4 text-blue-500" />
             <div>{commentCount}</div>
           </button>
-        </Link>
+        </a>
       </div>
     </div>
   );
