@@ -1,9 +1,20 @@
 import axios from "axios";
 
-export const handleGetVotesForPost = async (params: any) => {
+interface handleGetVotesForPostI {
+  postId: number;
+  userEmail: string;
+}
+
+export const handleGetVotesForPost = async ({
+  postId,
+  userEmail,
+}: handleGetVotesForPostI) => {
+  const params = { postId, userEmail };
+
   return axios
-    .get("/api/getVotesForPost/getVotesForPost", params)
+    .post("/api/getVotesForPost/getVotesForPost", params)
     .then((res) => {
+      console.log(res);
       return res.data.votesForPost;
     })
     .catch((err) => {

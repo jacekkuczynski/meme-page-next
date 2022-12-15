@@ -103,7 +103,7 @@ const UploadMemeForm = ({ userNickname }: UploadMemeFormProps) => {
           <input
             onChange={handleFileChange}
             type="file"
-            accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
+            accept="image/png, image/jpeg, image/jpg, image/gif, image/webp, image/jfif"
             className="hidden"
           />
         </label>

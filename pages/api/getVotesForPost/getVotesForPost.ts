@@ -1,9 +1,8 @@
 import { prisma } from "..";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { brotliDecompressSync } from "zlib";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "GET") {
+  if (req.method === "POST") {
     return await getVotesForPost(req, res);
   } else {
     return res
@@ -15,12 +14,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 const getVotesForPost = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;
   try {
-    const votesForPost = await prisma.votesByUser.findFirst({
-      where: { postId: body.postId, userEmail: body.userEmail },
-      //why is this not working with findUnique? ↓↓↓
-      // where: {
-      //   postId_userEmail: { postId: body.postId, userEmail: body.userEmail },
-      // },
+    const votesForPost = await prisma.votesByUser.findUnique({
+      where: {
+        postId_userEmail: { postId: body.postId, userEmail: body.userEmail },
+      },
     });
     return res.status(200).json({
       getVotesForPost,

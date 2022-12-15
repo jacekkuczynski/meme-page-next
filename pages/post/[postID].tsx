@@ -24,13 +24,14 @@ const PostID = ({ post }: PostPageI) => {
   useEffect(() => {
     const postID = router.query.postID;
     if (user?.nickname && Number.isInteger(Number(postID))) {
-      const userEmail = user.email;
+      const userEmail = user.email ? user.email : "";
       setUserState(user.nickname);
-      handleGetVotesForPost({ postID: Number(postID), userEmail }).then(
-        (res) => {
-          setIsPostLiked(res.isLiked);
-        }
-      );
+      handleGetVotesForPost({
+        postId: Number(postID),
+        userEmail: userEmail.toString(),
+      }).then((res) => {
+        setIsPostLiked(res.isLiked);
+      });
     }
   }, [router.query.postID, user]);
 
