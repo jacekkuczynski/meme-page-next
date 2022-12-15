@@ -1,4 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0";
+import { prisma } from "./api";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
@@ -7,6 +8,7 @@ import MemeStreamLayout from "../components/MemeStreamLayout/MemeStreamLayout";
 import Navbar from "../components/Navbar/Navbar";
 import { handleGetPostsToDisplay } from "../utils/handleGetPostsToDisplay";
 import { handleGetPostsToDisplayWithUser } from "../utils/handleGetPostsToDisplayWithUser";
+import { useHandleInfiniteScroll } from "../hooks/useHandleInfiniteScroll";
 // import Profile from "../components/Profile/Profile";
 
 export type post = {
@@ -22,13 +24,17 @@ export type post = {
   liked?: boolean | null;
   commentCount: number;
 };
-export default function Home() {
+
+export default function Home({ postCount }: { postCount: number }) {
   const [postsData, setPostsData] = useState<post[] | null>(null);
   const { user } = useUser();
+  const { scrollValue, windowHeight } = useHandleInfiniteScroll(postCount);
+
+  // console.log({ scrollValue, windowHeight });
 
   useEffect(() => {
     if (user) {
-      handleGetPostsToDisplayWithUser(user.email).then((res) => {
+      handleGetPostsToDisplayWithUser("cipa").then((res) => {
         setPostsData(res);
       });
     } else {
@@ -80,3 +86,8 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  const postCount = await prisma.post.count();
+  return { props: { postCount } };
+};

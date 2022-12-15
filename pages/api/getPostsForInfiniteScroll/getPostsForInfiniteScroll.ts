@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    return await getPostsToDisplayWithUser(req, res);
+    return await getPostsForInfiniteScroll(req, res);
   } else {
     return res
       .status(405)
@@ -11,40 +11,31 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const getPostsToDisplayWithUser = async (
+const getPostsForInfiniteScroll = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   const body = req.body;
   try {
-    const postCount = await prisma.post.count();
-    const postsToDisplayWithUser = await prisma.post.findMany({
+    const postsForInfiniteScroll = await prisma.post.findMany({
       take: 5,
-      where: {
-        VotesByUser: {
-          every: { userEmail: { equals: body.userEmail } },
-        },
-      },
+      skip: 5,
       include: {
-        VotesByUser: {
-          select: { isLiked: true },
-        },
         _count: {
           select: { comments: true },
         },
       },
     });
     return res.status(200).json({
-      getPostsToDisplayWithUser,
+      getPostsForInfiniteScroll,
       succes: true,
-      postsToDisplayWithUser,
-      postCount,
+      postsForInfiniteScroll,
     });
   } catch (error) {
     console.error("Request error", error);
     res
       .status(500)
-      .json({ error: "error getPostsToDisplayWithUser", succes: false });
+      .json({ error: "error getPostsForInfiniteScroll", succes: false });
   }
 };
 
