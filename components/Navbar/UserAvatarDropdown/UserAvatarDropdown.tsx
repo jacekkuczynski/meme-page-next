@@ -1,23 +1,16 @@
-import { UserProfile } from "@auth0/nextjs-auth0";
-import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
-import UserAvatar from "../../UserAvatar/UserAvatar";
+import { UserProfile } from '@auth0/nextjs-auth0';
+import Link from 'next/link';
+import React, { useEffect, useRef, useState } from 'react';
+import UserAvatar from '../../UserAvatar/UserAvatar';
 
-interface UserAvatarDropdown {
+interface UserAvatarDropdownI {
   user: UserProfile | undefined;
 }
 
-const UserAvatarDropdown = ({ user }: UserAvatarDropdown) => {
+function UserAvatarDropdown({ user }: UserAvatarDropdownI) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
-  const avatarRef = useRef<null | HTMLDivElement>(null);
-
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, []);
+  const avatarRef = useRef<null | HTMLButtonElement>(null);
 
   const handleClickOutside = (event: any) => {
     if (
@@ -28,21 +21,29 @@ const UserAvatarDropdown = ({ user }: UserAvatarDropdown) => {
     }
   };
 
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, []);
+
   return (
     <>
-      <div
+      <button
         ref={avatarRef}
         onClick={() => {
           setOpen(!open);
         }}
+        type="button"
       >
-        <UserAvatar avatarSrc={"/avatarExample.png"} />
-      </div>
+        <UserAvatar avatarSrc="/avatarExample.png" />
+      </button>
 
       <div
         ref={dropdownRef}
         className={`${
-          open ? "block" : ""
+          open ? 'block' : ''
         }hidden absolute top-12 right-0 h-fit border w-1/2 bg-white rounded-l-lg`}
       >
         <ul className="flex flex-col justify-center text-black divide-y-2 divide-dashed p-2">
@@ -69,6 +70,6 @@ const UserAvatarDropdown = ({ user }: UserAvatarDropdown) => {
       </div>
     </>
   );
-};
+}
 
 export default UserAvatarDropdown;

@@ -1,14 +1,14 @@
-import { useRouter } from "next/router";
-import { useState, useEffect, useRef } from "react";
-import { handleAddComment } from "../../utils/handleAddComment";
+import React, { useState, useRef } from 'react';
+import { useRouter } from 'next/router';
+import { handleAddComment } from '../../utils/handleAddComment';
 
 interface CommentsFormI {
   username: string;
   onSubmit: Function;
 }
 
-const CommentsForm = ({ username, onSubmit }: CommentsFormI) => {
-  const [commentContentState, setCommentContentState] = useState("");
+function CommentsForm({ username, onSubmit }: CommentsFormI) {
+  const [commentContentState, setCommentContentState] = useState('');
   const router = useRouter();
   const currentPost = Number(router.query.postID);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -18,11 +18,11 @@ const CommentsForm = ({ username, onSubmit }: CommentsFormI) => {
     handleAddComment({
       commentContent: commentContentState,
       postId: currentPost,
-      username: username,
+      username,
     }).then((res) => {
       onSubmit(res);
     });
-    if (textAreaRef.current) textAreaRef.current.value = "";
+    if (textAreaRef.current) textAreaRef.current.value = '';
   };
 
   return (
@@ -39,7 +39,7 @@ const CommentsForm = ({ username, onSubmit }: CommentsFormI) => {
               className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
               placeholder="Write a comment..."
               required
-            ></textarea>
+            />
           </div>
           <button type="submit" className="button">
             Post comment
@@ -48,6 +48,6 @@ const CommentsForm = ({ username, onSubmit }: CommentsFormI) => {
       </div>
     </section>
   );
-};
+}
 
 export default CommentsForm;
