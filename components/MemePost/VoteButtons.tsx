@@ -1,7 +1,7 @@
-import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { handlePostVote } from "../../utils/handlePostVote";
+import React, { useEffect, useState } from 'react';
+import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
+import { handlePostVote } from '../../utils/handlePostVote';
 
 interface VoteButtonsI {
   likedState: boolean | null;
@@ -13,7 +13,7 @@ interface VoteButtonsI {
   liked?: boolean | null;
 }
 
-const VoteButtons = ({
+function VoteButtons({
   likedState,
   userEmail,
   postHref,
@@ -21,7 +21,7 @@ const VoteButtons = ({
   upvoteCount,
   downvoteCount,
   liked,
-}: VoteButtonsI) => {
+}: VoteButtonsI) {
   const [upvoteCountState, setUpvoteCountState] = useState(0);
   const [downvoteCountState, setDownvoteCountState] = useState(0);
 
@@ -39,7 +39,7 @@ const VoteButtons = ({
           liked: false,
           side: true,
           postId: postHref,
-          userEmail: userEmail,
+          userEmail,
         });
         setUpvoteCountState(upvoteCountState + 1);
         setDownvoteCountState(downvoteCountState - 1);
@@ -49,14 +49,14 @@ const VoteButtons = ({
           liked: null,
           side: true,
           postId: postHref,
-          userEmail: userEmail,
+          userEmail,
         });
         setUpvoteCountState(upvoteCountState + 1);
         setIsLikedState(true);
       }
     } else {
-      toast("You need to login or register to vote!", {
-        icon: "🚀",
+      toast('You need to login or register to vote!', {
+        icon: '🚀',
       });
     }
   };
@@ -67,7 +67,7 @@ const VoteButtons = ({
           liked: true,
           side: false,
           postId: postHref,
-          userEmail: userEmail,
+          userEmail,
         });
         setDownvoteCountState(downvoteCountState + 1);
         setUpvoteCountState(upvoteCountState - 1);
@@ -77,14 +77,14 @@ const VoteButtons = ({
           liked: null,
           side: false,
           postId: postHref,
-          userEmail: userEmail,
+          userEmail,
         });
         setDownvoteCountState(downvoteCountState + 1);
         setIsLikedState(false);
       }
     } else {
-      toast("You need to login or register to vote!", {
-        icon: "🚀",
+      toast('You need to login or register to vote!', {
+        icon: '🚀',
       });
     }
   };
@@ -93,10 +93,11 @@ const VoteButtons = ({
     <>
       <button
         onClick={handleUpvote}
+        type="submit"
         className={`${
           likedState === true
-            ? "meme-control-button bg-green-200"
-            : "meme-control-button"
+            ? 'meme-control-button bg-green-200'
+            : 'meme-control-button'
         }`}
       >
         <ArrowUpIcon className="h-4 w-4 text-blue-500" />
@@ -104,10 +105,11 @@ const VoteButtons = ({
       </button>
       <button
         onClick={handleDownvote}
+        type="submit"
         className={`${
           likedState === false
-            ? "meme-control-button bg-red-200"
-            : "meme-control-button "
+            ? 'meme-control-button bg-red-200'
+            : 'meme-control-button '
         }`}
       >
         <ArrowDownIcon className="h-4 w-4 text-blue-500" />
@@ -115,6 +117,6 @@ const VoteButtons = ({
       </button>
     </>
   );
-};
+}
 
 export default VoteButtons;

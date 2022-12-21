@@ -1,25 +1,15 @@
-import { prisma } from "..";
-import type { NextApiRequest, NextApiResponse } from "next";
-
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "GET") {
-    return await getPostsToDisplayWithUser(req, res);
-  } else {
-    return res
-      .status(405)
-      .json({ message: "Method not allowed", succes: false });
-  }
-};
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '..';
 
 const getPostsToDisplayWithUser = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
-  const body = req.body;
+  const { body } = req;
   try {
     const postCount = await prisma.post.count();
     const postsToDisplayWithUser = await prisma.post.findMany({
-      take: 5,
+      take: 10,
       where: {
         VotesByUser: {
           every: { userEmail: { equals: body.userEmail } },
@@ -41,11 +31,17 @@ const getPostsToDisplayWithUser = async (
       postCount,
     });
   } catch (error) {
-    console.error("Request error", error);
-    res
+    return res
       .status(500)
-      .json({ error: "error getPostsToDisplayWithUser", succes: false });
+      .json({ error: 'error getPostsToDisplayWithUser', succes: false });
   }
+};
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'GET') {
+    return getPostsToDisplayWithUser(req, res);
+  }
+  return res.status(405).json({ message: 'Method not allowed', succes: false });
 };
 
 export default handler;

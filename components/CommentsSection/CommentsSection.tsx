@@ -1,23 +1,18 @@
-import { useState, useEffect } from "react";
-import { commentType } from "../../types/types";
-import CommentsForm from "./CommentsForm";
+import React, { useState, useEffect } from 'react';
+import { commentType } from '../../types/types';
+import CommentsForm from './CommentsForm';
 
 interface CommentsSectionI {
-  commentsCount?: number;
   username: string;
-  comment: commentType[] | [];
+  comments: commentType[] | [];
 }
 
-const CommentsSection = ({
-  commentsCount,
-  username,
-  comment,
-}: CommentsSectionI) => {
+function CommentsSection({ username, comments }: CommentsSectionI) {
   const [commentsState, setCommentsState] = useState<commentType[]>([]);
 
   useEffect(() => {
-    if (comment) setCommentsState(comment);
-  }, []);
+    if (comments) setCommentsState(comments);
+  }, [comments]);
 
   const handleOnSubmit = (newCommentData: commentType) => {
     setCommentsState((prevState) => [...prevState, newCommentData]);
@@ -41,11 +36,11 @@ const CommentsSection = ({
       )}
       {/* comment display */}
       <div className="w-8/12">
-        {commentsState.map((comment, index) => {
+        {commentsState.map((comment) => {
           const date = new Date(Date.parse(comment.date)).toDateString();
           return (
             <div
-              key={index}
+              key={comment.id}
               className="w-full flex flex-col mb-8 mr-3 border border-gray-200 p-4 rounded bg-neutral-50 shadow-sm "
             >
               <div className="text-sm text-gray-700 font-light">
@@ -61,6 +56,6 @@ const CommentsSection = ({
       </div>
     </>
   );
-};
+}
 
 export default CommentsSection;

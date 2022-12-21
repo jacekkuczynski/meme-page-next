@@ -1,10 +1,10 @@
-import Image from "next/image";
-import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
-import UserAvatar from "../UserAvatar/UserAvatar";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useUser } from "@auth0/nextjs-auth0";
-import VoteButtons from "./VoteButtons";
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { useUser } from '@auth0/nextjs-auth0/';
+import UserAvatar from '../UserAvatar/UserAvatar';
+import VoteButtons from './VoteButtons';
 
 type MemePostProps = {
   userAvatarURL: string;
@@ -18,7 +18,7 @@ type MemePostProps = {
   liked?: boolean | null;
 };
 
-const MemePost = ({
+function MemePost({
   userAvatarURL,
   username,
   memeTitle,
@@ -29,7 +29,7 @@ const MemePost = ({
   postHref,
 
   liked,
-}: MemePostProps) => {
+}: MemePostProps) {
   const [likedState, setIsLikedState] = useState<boolean | null>(null);
   const [userEmail, setUserEmail] = useState<null | string>(null);
   const { user } = useUser();
@@ -60,7 +60,7 @@ const MemePost = ({
           <h4>{memeTitle}</h4>
         </Link>
       </div>
-      {/* meme */}{" "}
+      {/* meme */}{' '}
       <a href={`/post/${postHref}`} target="_blank" rel="noreferrer">
         <Image src={fileURL} alt="meme about coding" width={500} height={500} />
       </a>
@@ -75,7 +75,7 @@ const MemePost = ({
           liked={liked}
         />
         <a href={`/post/${postHref}`} target="_blank" rel="noreferrer">
-          <button className="meme-control-button">
+          <button className="meme-control-button" type="button">
             <ChatBubbleLeftIcon className="h-4 w-4 text-blue-500" />
             <div>{commentCount}</div>
           </button>
@@ -83,6 +83,6 @@ const MemePost = ({
       </div>
     </div>
   );
-};
+}
 
 export default MemePost;

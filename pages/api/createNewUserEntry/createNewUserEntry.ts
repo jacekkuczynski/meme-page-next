@@ -1,24 +1,13 @@
+// with auth0 actions - Post User Registration
 
-//with auth0 actions - Post User Registration
-
-import { prisma } from "..";
-import type { NextApiRequest, NextApiResponse } from "next";
-
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
-    return await createNewUserEntry(req, res);
-  } else {
-    return res
-      .status(405)
-      .json({ message: "Method not allowed", succes: false });
-  }
-};
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '..';
 
 const createNewUserEntry = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
-  const body = req.body;
+  const { body } = req;
   try {
     const newUser = await prisma.user.create({
       data: {
@@ -27,9 +16,17 @@ const createNewUserEntry = async (
     });
     return res.status(200).json({ createNewUserEntry, succes: true, newUser });
   } catch (error) {
-    console.error("Request error", error);
-    res.status(500).json({ error: "error creating post", succes: false });
+    return res
+      .status(500)
+      .json({ error: 'error creating post', succes: false });
   }
+};
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'POST') {
+    return createNewUserEntry(req, res);
+  }
+  return res.status(405).json({ message: 'Method not allowed', succes: false });
 };
 
 export default handler;

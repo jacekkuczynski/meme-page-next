@@ -1,39 +1,39 @@
-import { prisma } from "../api";
-import Navbar from "../../components/Navbar/Navbar";
-import MemePost from "../../components/MemePost/MemePost";
-import { GetServerSideProps } from "next/types";
-import { PostType } from "../../types/types";
-import { useUser } from "@auth0/nextjs-auth0";
-import { useEffect, useState } from "react";
-import CommentsSection from "../../components/CommentsSection/CommentsSection";
-import { useRouter } from "next/router";
-import { handleGetVotesForPost } from "../../utils/handleGetVotesForPost";
+import React, { useEffect, useState } from 'react';
+import { GetServerSideProps } from 'next/types';
+import { useUser } from '@auth0/nextjs-auth0/';
+import { useRouter } from 'next/router';
+import { prisma } from '../api';
+import Navbar from '../../components/Navbar/Navbar';
+import MemePost from '../../components/MemePost/MemePost';
+import { PostType } from '../../types/types';
+import CommentsSection from '../../components/CommentsSection/CommentsSection';
+import { handleGetVotesForPost } from '../../utils/handleGetVotesForPost';
 
 interface PostPageI {
   post: PostType | null;
 }
 
-const PostID = ({ post }: PostPageI) => {
+function PostID({ post }: PostPageI) {
   const { user } = useUser();
-  const [userState, setUserState] = useState("");
+  const [userState, setUserState] = useState('');
   const [isPostLiked, setIsPostLiked] = useState<null | boolean>(null);
   const postData = post?.postData;
   const commentsData = post?.commentsData;
   const router = useRouter();
 
   useEffect(() => {
-    const postID = router.query.postID;
+    const { postID } = router.query;
     if (user?.nickname && Number.isInteger(Number(postID))) {
-      const userEmail = user.email ? user.email : "";
+      const userEmail = user.email ? user.email : '';
       setUserState(user.nickname);
       handleGetVotesForPost({
         postId: Number(postID),
         userEmail: userEmail.toString(),
       }).then((res) => {
-        setIsPostLiked(res.isLiked);
+        setIsPostLiked(res?.isLiked);
       });
     }
-  }, [router.query.postID, user]);
+  }, [router.query, router.query.postID, user]);
 
   return (
     <>
@@ -42,7 +42,7 @@ const PostID = ({ post }: PostPageI) => {
         {postData ? (
           <>
             <MemePost
-              userAvatarURL={"/avatarExample.png"}
+              userAvatarURL="/avatarExample.png"
               username={postData.username}
               memeTitle={postData.memeTitle}
               fileURL={postData.fileURL}
@@ -53,31 +53,25 @@ const PostID = ({ post }: PostPageI) => {
               liked={isPostLiked}
             />
             {commentsData ? (
-              <CommentsSection
-                commentsCount={commentsData?.length}
-                username={userState}
-                comment={commentsData}
-              />
+              <CommentsSection username={userState} comments={commentsData} />
             ) : (
-              <CommentsSection username={userState} comment={[]} />
+              <CommentsSection username={userState} comments={[]} />
             )}
           </>
         ) : (
-          <>
-            <div>Sorry, no meme of given url</div>
-          </>
+          <div>Sorry, no meme of given url</div>
         )}
       </section>
     </>
   );
-};
+}
 
 export default PostID;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const url = context.query.postID;
 
-  //check if route is integer e.g. "/post/12", if true, query db to find specific post
+  // check if route is integer e.g. "/post/12", if true, query db to find specific post
   if (Number.isInteger(Number(url))) {
     const postData = await prisma.post.findUnique({
       where: {
@@ -92,6 +86,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (postData !== null) {
       const post = JSON.parse(JSON.stringify({ postData, commentsData }));
       return { props: { post } };
-    } else return { props: { post: null } };
-  } else return { props: { post: null } };
+    }
+    return { props: { post: null } };
+  }
+  return { props: { post: null } };
 };

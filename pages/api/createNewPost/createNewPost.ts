@@ -1,18 +1,8 @@
-import { prisma } from "..";
-import type { NextApiRequest, NextApiResponse } from "next";
-
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
-    return await createNewPost(req, res);
-  } else {
-    return res
-      .status(405)
-      .json({ message: "Method not allowed", succes: false });
-  }
-};
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '..';
 
 const createNewPost = async (req: NextApiRequest, res: NextApiResponse) => {
-  const body = req.body;
+  const { body } = req;
   try {
     const newPost = await prisma.post.create({
       data: {
@@ -26,9 +16,17 @@ const createNewPost = async (req: NextApiRequest, res: NextApiResponse) => {
     });
     return res.status(200).json({ createNewPost, succes: true, newPost });
   } catch (error) {
-    console.error("Request error", error);
-    res.status(500).json({ error: "error creating post", succes: false });
+    return res
+      .status(500)
+      .json({ error: 'error creating post', succes: false });
   }
+};
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'POST') {
+    return createNewPost(req, res);
+  }
+  return res.status(405).json({ message: 'Method not allowed', succes: false });
 };
 
 export default handler;

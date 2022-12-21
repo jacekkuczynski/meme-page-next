@@ -1,21 +1,11 @@
-import { prisma } from "..";
-import type { NextApiRequest, NextApiResponse } from "next";
-
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "GET") {
-    return await getPostsForInfiniteScroll(req, res);
-  } else {
-    return res
-      .status(405)
-      .json({ message: "Method not allowed", succes: false });
-  }
-};
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '..';
 
 const getPostsForInfiniteScroll = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
-  const body = req.body;
+  // const { body } = req;
   try {
     const postsForInfiniteScroll = await prisma.post.findMany({
       take: 5,
@@ -32,11 +22,17 @@ const getPostsForInfiniteScroll = async (
       postsForInfiniteScroll,
     });
   } catch (error) {
-    console.error("Request error", error);
-    res
+    return res
       .status(500)
-      .json({ error: "error getPostsForInfiniteScroll", succes: false });
+      .json({ error: 'error getPostsForInfiniteScroll', succes: false });
   }
+};
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'GET') {
+    return getPostsForInfiniteScroll(req, res);
+  }
+  return res.status(405).json({ message: 'Method not allowed', succes: false });
 };
 
 export default handler;

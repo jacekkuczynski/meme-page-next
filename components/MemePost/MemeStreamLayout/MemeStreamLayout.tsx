@@ -1,15 +1,13 @@
-import { Children } from "react";
+import React from 'react';
 
 type MemeStreamLayoutProps = {
   children: JSX.Element | JSX.Element[];
 };
 
-const MemeStreamLayout = (props: MemeStreamLayoutProps) => {
+function MemeStreamLayout({ children }: MemeStreamLayoutProps) {
   return (
-    <div className="flex flex-col items-center w-full my-24">
-      {props.children}
-    </div>
+    <div className="flex flex-col items-center w-full my-24">{children}</div>
   );
-};
+}
 
 export default MemeStreamLayout;
