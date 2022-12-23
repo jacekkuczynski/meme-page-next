@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-type uploadedPostDataType = {
+type UploadedPostDataType = {
   upvoteCount: number;
   downvoteCount: number;
   memeTitle: string;
@@ -11,16 +11,11 @@ type uploadedPostDataType = {
 };
 
 export const handleUploadMemeDataToDb = async (
-  uploadedPostData: uploadedPostDataType
-) => {
-  console.log("handleUploadMemeDataToDb Fired");
-
-  return axios
-    .post("/api/createNewPost/createNewPost", uploadedPostData)
-    .then((res) => {
-      return res.data.newPost;
-    })
+  uploadedPostData: UploadedPostDataType,
+) =>
+  axios
+    .post('/api/createNewPost/createNewPost', uploadedPostData)
+    .then((res) => res.data.newPost)
     .catch((err) => {
-      console.log("something went wrong...", err);
+      console.log('something went wrong...', err);
     });
-};

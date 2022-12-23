@@ -1,10 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '..';
+import { postsFetchedAtOnce } from '../../../config/postsFetchedAtOnce';
 
 const getPostsToDisplay = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const postsToDisplay = await prisma.post.findMany({
-      take: 10,
+      take: postsFetchedAtOnce,
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
         _count: {
           select: { comments: true },

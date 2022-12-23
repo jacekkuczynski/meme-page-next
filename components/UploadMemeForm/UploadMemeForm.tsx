@@ -50,8 +50,8 @@ function UploadMemeForm({ userNickname }: UploadMemeFormProps) {
       setIsUploading(true);
       uploadTask.on(
         'state_changed',
-        (snapshot) => {},
-        (err) => {},
+        (snapshot) => snapshot,
+        (err) => err,
         async () => {
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             handleUploadMemeDataToDb({

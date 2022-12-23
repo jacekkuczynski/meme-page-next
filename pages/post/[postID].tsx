@@ -1,39 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { GetServerSideProps } from 'next/types';
-import { useUser } from '@auth0/nextjs-auth0/';
-import { useRouter } from 'next/router';
 import { prisma } from '../api';
 import Navbar from '../../components/Navbar/Navbar';
 import MemePost from '../../components/MemePost/MemePost';
 import { PostType } from '../../types/types';
 import CommentsSection from '../../components/CommentsSection/CommentsSection';
-import { handleGetVotesForPost } from '../../utils/handleGetVotesForPost';
+import { useGetVoteForSinglePost } from '../../hooks/useGetVoteForSinglePost';
 
 interface PostPageI {
   post: PostType | null;
 }
 
 function PostID({ post }: PostPageI) {
-  const { user } = useUser();
-  const [userState, setUserState] = useState('');
-  const [isPostLiked, setIsPostLiked] = useState<null | boolean>(null);
   const postData = post?.postData;
   const commentsData = post?.commentsData;
-  const router = useRouter();
-
-  useEffect(() => {
-    const { postID } = router.query;
-    if (user?.nickname && Number.isInteger(Number(postID))) {
-      const userEmail = user.email ? user.email : '';
-      setUserState(user.nickname);
-      handleGetVotesForPost({
-        postId: Number(postID),
-        userEmail: userEmail.toString(),
-      }).then((res) => {
-        setIsPostLiked(res?.isLiked);
-      });
-    }
-  }, [router.query, router.query.postID, user]);
+  const { userState, isPostLiked } = useGetVoteForSinglePost();
 
   return (
     <>
@@ -71,7 +52,6 @@ export default PostID;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const url = context.query.postID;
 
-  // check if route is integer e.g. "/post/12", if true, query db to find specific post
   if (Number.isInteger(Number(url))) {
     const postData = await prisma.post.findUnique({
       where: {

@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-interface handleGetVotesForPostI {
+interface HandleGetVotesForPostI {
   postId: number;
   userEmail: string;
 }
@@ -8,16 +8,13 @@ interface handleGetVotesForPostI {
 export const handleGetVotesForPost = async ({
   postId,
   userEmail,
-}: handleGetVotesForPostI) => {
+}: HandleGetVotesForPostI) => {
   const params = { postId, userEmail };
 
   return axios
-    .post("/api/getVotesForPost/getVotesForPost", params)
-    .then((res) => {
-      console.log(res);
-      return res.data.votesForPost;
-    })
+    .post('/api/getVotesForPost/getVotesForPost', params)
+    .then((res) => res.data.votesForPost)
     .catch((err) => {
-      console.log("something went wrong...", err);
+      console.log('something went wrong...', err);
     });
 };

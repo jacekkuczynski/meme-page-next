@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-interface handlePostVoteI {
+interface HandlePostVoteI {
   liked: boolean | null;
   postId: number;
   userEmail: string;
@@ -12,36 +12,34 @@ export const handlePostVote = async ({
   postId,
   userEmail,
   side,
-}: handlePostVoteI) => {
+}: HandlePostVoteI) => {
   if (liked === false && side === true) {
     axios
-      .post("/api/postVoting/upVoteFromDownVote", { postId, userEmail })
+      .post('/api/postVoting/upVoteFromDownVote', { postId, userEmail })
       .then((res) => {})
       .catch((err) => {
-        console.log("something went wrong...", err);
+        console.log('something went wrong...', err);
       });
   } else if (liked === null && side === true) {
     axios
-      .post("/api/postVoting/upVoteFromNull", { postId, userEmail })
+      .post('/api/postVoting/upVoteFromNull', { postId, userEmail })
       .then((res) => {})
       .catch((err) => {
-        console.log("something went wrong...", err);
+        console.log('something went wrong...', err);
       });
   } else if (liked === true && side === false) {
     axios
-      .post("/api/postVoting/downVoteFromUpVote", { postId, userEmail })
+      .post('/api/postVoting/downVoteFromUpVote', { postId, userEmail })
       .then((res) => {})
       .catch((err) => {
-        console.log("something went wrong...", err);
+        console.log('something went wrong...', err);
       });
   } else if (liked === null && side === false) {
     axios
-
-      .post("/api/postVoting/downVoteFromNull", { postId, userEmail })
-
+      .post('/api/postVoting/downVoteFromNull', { postId, userEmail })
       .then((res) => {})
       .catch((err) => {
-        console.log("something went wrong...", err);
+        console.log('something went wrong...', err);
       });
   }
 };

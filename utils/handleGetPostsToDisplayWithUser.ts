@@ -1,14 +1,19 @@
-import axios from "axios";
+import axios from 'axios';
 
-export const handleGetPostsToDisplayWithUser = async (userEmail: any) => {
+interface HandleGetPostsToDisplayWithUserI {
+  userEmail: string;
+}
+
+export const handleGetPostsToDisplayWithUser = async ({
+  userEmail,
+}: HandleGetPostsToDisplayWithUserI) => {
+  const params = { userEmail };
   return axios
-    .get("/api/getPostsToDisplayWithUser/getPostsToDisplayWithUser", userEmail)
-    .then((res) => {
-      return res.data.postsToDisplayWithUser.map((post: any) => {
-        const mapLikeArray = post.VotesByUser.map((el: any) => {
-          return el.isLiked;
-        })[0];
-        const isLiked = mapLikeArray == undefined ? null : mapLikeArray;
+    .post('/api/getPostsToDisplayWithUser/getPostsToDisplayWithUser', params)
+    .then((res) =>
+      res.data.postsToDisplayWithUser.map((post: any) => {
+        const mapLikeArray = post.VotesByUser.map((el: any) => el.isLiked)[0];
+        const isLiked = mapLikeArray === undefined ? null : mapLikeArray;
         return {
           createdAt: post.createdAt,
           downvoteCount: post.downvoteCount,
@@ -20,12 +25,13 @@ export const handleGetPostsToDisplayWithUser = async (userEmail: any) => {
           userAvatarURL: post.userAvatarURL,
           userId: post.userId,
           username: post.username,
+          // eslint-disable-next-line no-underscore-dangle
           commentCount: post._count.comments,
           liked: isLiked,
         };
-      });
-    })
+      }),
+    )
     .catch((err) => {
-      console.log("something went wrong...", err);
+      console.log('something went wrong...', err);
     });
 };
