@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { commentType } from '../../types/types';
+import { CommentT } from '../../types/types';
 import CommentsForm from './CommentsForm';
 
 interface CommentsSectionI {
   username: string;
-  comments: commentType[] | [];
+  comments: CommentT[] | [];
 }
 
 function CommentsSection({ username, comments }: CommentsSectionI) {
-  const [commentsState, setCommentsState] = useState<commentType[]>([]);
+  const [commentsState, setCommentsState] = useState<CommentT[]>([]);
 
   useEffect(() => {
     if (comments) setCommentsState(comments);
   }, [comments]);
 
-  const handleOnSubmit = (newCommentData: commentType) => {
+  const handleOnSubmit = (newCommentData: CommentT) => {
     setCommentsState((prevState) => [...prevState, newCommentData]);
   };
 

@@ -1,20 +1,15 @@
-import axios from "axios";
+import axios from 'axios';
 
-type addedCommentType = {
+type AddedCommentType = {
   commentContent: string;
   postId: number;
   username: string;
 };
 
-export const handleAddComment = async (
-  uploadedCommentData: addedCommentType
-) => {
-  return axios
-    .post("/api/createNewComment/createNewComment", uploadedCommentData)
-    .then((res) => {
-      return res.data.newComment;
-    })
+export const handleAddComment = async (uploadedCommentData: AddedCommentType) =>
+  axios
+    .post('/api/createNewComment/createNewComment', uploadedCommentData)
+    .then((res) => res.data.newComment)
     .catch((err) => {
-      console.log("something went wrong...", err);
+      console.log('something went wrong...', err);
     });
-};

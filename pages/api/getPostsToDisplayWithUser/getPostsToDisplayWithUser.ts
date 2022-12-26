@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '..';
+import { postsFetchedAtOnce } from '../../../config/postsFetchedAtOnce';
 
 const getPostsToDisplayWithUser = async (
   req: NextApiRequest,
@@ -9,15 +10,15 @@ const getPostsToDisplayWithUser = async (
   try {
     const postCount = await prisma.post.count();
     const postsToDisplayWithUser = await prisma.post.findMany({
-      take: 10,
-      where: {
-        VotesByUser: {
-          every: { userEmail: { equals: body.userEmail } },
-        },
+      take: postsFetchedAtOnce,
+      orderBy: {
+        createdAt: 'desc',
       },
       include: {
         VotesByUser: {
-          select: { isLiked: true },
+          where: {
+            userEmail: body.userEmail,
+          },
         },
         _count: {
           select: { comments: true },
@@ -38,7 +39,7 @@ const getPostsToDisplayWithUser = async (
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'GET') {
+  if (req.method === 'POST') {
     return getPostsToDisplayWithUser(req, res);
   }
   return res.status(405).json({ message: 'Method not allowed', succes: false });

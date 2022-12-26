@@ -1,12 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
 
-export const handleGetPostsForInfiniteScroll = async (skipCount: any) => {
-  return axios
-    .get("/api/getPostsForInfiniteScroll/getPostsForInfiniteScroll", skipCount)
-    .then((res) => {
-      return res;
+interface HandleGetPostsForInfiniteScrollI {
+  postsToSkip: number;
+}
+
+export const handleGetPostsForInfiniteScroll = async ({
+  postsToSkip,
+}: HandleGetPostsForInfiniteScrollI) =>
+  axios
+    .post('/api/getPostsForInfiniteScroll/getPostsForInfiniteScroll', {
+      postsToSkip,
     })
+    .then((res) => res.data)
     .catch((err) => {
-      console.log("something went wrong...", err);
+      console.log('handleGetPostsForInfiniteScroll went wrong...', err);
     });
-};

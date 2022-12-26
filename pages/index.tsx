@@ -1,44 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/';
+import React from 'react';
 import Head from 'next/head';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
-import MemePost from '../components/MemePost/MemePost';
-import MemeStreamLayout from '../components/MemeStreamLayout/MemeStreamLayout';
 import Navbar from '../components/Navbar/Navbar';
-import { handleGetPostsToDisplay } from '../utils/handleGetPostsToDisplay';
-import { handleGetPostsToDisplayWithUser } from '../utils/handleGetPostsToDisplayWithUser';
-// import { prisma } from './api';
-
-export type PostType = {
-  createdAt: string;
-  downvoteCount: number;
-  fileURL: string;
-  id: number;
-  memeTitle: string;
-  upvoteCount: number;
-  updatedAt: string;
-  userAvatarURL: string;
-  username: string;
-  liked?: boolean | null;
-  commentCount: number;
-};
+import { useGetPostsWithOrWOUser } from '../hooks/useGetPostsWithOrWOUser';
+import { SinglePostType } from '../types/types';
+import MemePost from '../components/MemePost/MemePost';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 export default function Home() {
-  const [postsData, setPostsData] = useState<PostType[] | null>(null);
-  const { user } = useUser();
-
-  useEffect(() => {
-    if (user) {
-      handleGetPostsToDisplayWithUser(user.email).then((res) => {
-        setPostsData(res);
-      });
-    } else {
-      handleGetPostsToDisplay().then((res) => {
-        setPostsData(res);
-      });
-    }
-  }, [user]);
-
+  const postsData = useGetPostsWithOrWOUser();
   return (
     <>
       <Head>
@@ -52,33 +21,30 @@ export default function Home() {
       <Navbar />
 
       <main>
-        <MemeStreamLayout>
-          {/* <Profile /> */}
-          {postsData ? (
-            postsData.map((post: PostType) => (
-              <MemePost
-                key={post.id}
-                userAvatarURL="/avatarExample.png"
-                username={post.username}
-                memeTitle={post.memeTitle}
-                fileURL={post.fileURL}
-                upvoteCount={post.upvoteCount}
-                downvoteCount={post.downvoteCount}
-                commentCount={post.commentCount}
-                postHref={post.id}
-                liked={post.liked}
-              />
-            ))
-          ) : (
-            <LoadingSpinner />
-          )}
-        </MemeStreamLayout>
+        <main>
+          <div className="meme-stream">
+            {/* <Profile /> */}
+            {postsData ? (
+              postsData.map((post: SinglePostType) => (
+                <MemePost
+                  key={post.id}
+                  userAvatarURL="/avatarExample.png"
+                  username={post.username}
+                  memeTitle={post.memeTitle}
+                  fileURL={post.fileURL}
+                  upvoteCount={post.upvoteCount}
+                  downvoteCount={post.downvoteCount}
+                  commentCount={post.commentCount}
+                  postHref={post.id}
+                  liked={post.liked}
+                />
+              ))
+            ) : (
+              <LoadingSpinner />
+            )}
+          </div>
+        </main>
       </main>
     </>
   );
 }
-
-// export const getServerSideProps = async () => {
-//   const postCount = await prisma.post.count();
-//   return { props: { postCount } };
-// };
