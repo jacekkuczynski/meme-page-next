@@ -5,11 +5,13 @@ import { handleGetPostsForScroll } from '../utils/handleGetPostsForScroll';
 import { handleGetPostsForScrollWithUser } from '../utils/handleGetPostsForScrollWithUser';
 import { useGetPostsWithOrWOUser } from './useGetPostsWithOrWOUser';
 
-interface UseGetPostsI {
+interface UseGetPostsAndHandleInfiniteScroll {
   postCount: number;
 }
 
-export const useGetPosts = ({ postCount }: UseGetPostsI) => {
+export const useGetPostsAndHandleInfiniteScroll = ({
+  postCount,
+}: UseGetPostsAndHandleInfiniteScroll) => {
   const postsData = useGetPostsWithOrWOUser();
   const [scrollY, setScrollY] = useState(0);
   const [postsToSkip, setPostsToSkip] = useState(postsFetchedAtOnce);

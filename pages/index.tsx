@@ -6,7 +6,7 @@ import { prisma } from './api';
 import MemePost from '../components/MemePost/MemePost';
 import { SinglePostType } from '../types/types';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
-import { useGetPosts } from '../hooks/useGetPosts';
+import { useGetPostsAndHandleInfiniteScroll } from '../hooks/useGetPostsAndHandleInfiniteScroll';
 
 interface HomeI {
   postCount: number;
@@ -14,7 +14,7 @@ interface HomeI {
 
 export default function Home({ postCount }: HomeI) {
   // const postsData = useGetPostsWithOrWOUser();
-  const { data } = useGetPosts({ postCount });
+  const { data } = useGetPostsAndHandleInfiniteScroll({ postCount });
 
   return (
     <>
