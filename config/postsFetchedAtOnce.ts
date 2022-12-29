@@ -1,1 +1,1 @@
-export const postsFetchedAtOnce = 15;
+export const postsFetchedAtOnce = 2;

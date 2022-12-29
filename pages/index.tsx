@@ -1,13 +1,21 @@
 import React from 'react';
 import Head from 'next/head';
 import Navbar from '../components/Navbar/Navbar';
-import { useGetPostsWithOrWOUser } from '../hooks/useGetPostsWithOrWOUser';
-import { SinglePostType } from '../types/types';
-import MemePost from '../components/MemePost/MemePost';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
-export default function Home() {
-  const postsData = useGetPostsWithOrWOUser();
+import { prisma } from './api';
+import MemePost from '../components/MemePost/MemePost';
+import { SinglePostType } from '../types/types';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import { useGetPostsAndHandleInfiniteScroll } from '../hooks/useGetPostsAndHandleInfiniteScroll';
+
+interface HomeI {
+  postCount: number;
+}
+
+export default function Home({ postCount }: HomeI) {
+  // const postsData = useGetPostsWithOrWOUser();
+  const { data } = useGetPostsAndHandleInfiniteScroll({ postCount });
+
   return (
     <>
       <Head>
@@ -21,30 +29,34 @@ export default function Home() {
       <Navbar />
 
       <main>
-        <main>
-          <div className="meme-stream">
-            {/* <Profile /> */}
-            {postsData ? (
-              postsData.map((post: SinglePostType) => (
-                <MemePost
-                  key={post.id}
-                  userAvatarURL="/avatarExample.png"
-                  username={post.username}
-                  memeTitle={post.memeTitle}
-                  fileURL={post.fileURL}
-                  upvoteCount={post.upvoteCount}
-                  downvoteCount={post.downvoteCount}
-                  commentCount={post.commentCount}
-                  postHref={post.id}
-                  liked={post.liked}
-                />
-              ))
-            ) : (
-              <LoadingSpinner />
-            )}
-          </div>
-        </main>
+        <div className="meme-stream">
+          {data ? (
+            data.map((post: SinglePostType) => (
+              <MemePost
+                key={post.id}
+                userAvatarURL="/avatarExample.png"
+                username={post.username}
+                memeTitle={post.memeTitle}
+                fileURL={post.fileURL}
+                upvoteCount={post.upvoteCount}
+                downvoteCount={post.downvoteCount}
+                commentCount={post.commentCount}
+                postHref={post.id}
+                liked={post.liked}
+              />
+            ))
+          ) : (
+            <LoadingSpinner />
+          )}
+        </div>
       </main>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const postCount = await prisma.post.count();
+  return {
+    props: { postCount }, // will be passed to the page component as props
+  };
 }
