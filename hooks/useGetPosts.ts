@@ -1,6 +1,8 @@
+import { useUser } from '@auth0/nextjs-auth0';
 import { useState, useEffect, useCallback } from 'react';
 import { postsFetchedAtOnce } from '../config/postsFetchedAtOnce';
-import { handleGetPostsForInfiniteScroll } from '../utils/handleGetPostsForInfiniteScroll';
+import { handleGetPostsForScroll } from '../utils/handleGetPostsForScroll';
+import { handleGetPostsForScrollWithUser } from '../utils/handleGetPostsForScrollWithUser';
 import { useGetPostsWithOrWOUser } from './useGetPostsWithOrWOUser';
 
 interface UseGetPostsI {
@@ -10,7 +12,6 @@ interface UseGetPostsI {
 export const useGetPosts = ({ postCount }: UseGetPostsI) => {
   const postsData = useGetPostsWithOrWOUser();
   const [scrollY, setScrollY] = useState(0);
-  const [scrollThreshold, setScrollThreshold] = useState(0);
   const [postsToSkip, setPostsToSkip] = useState(postsFetchedAtOnce);
   const [isFetched, setIsFetched] = useState(false);
   const [data, setData] = useState<any>();
@@ -18,6 +19,7 @@ export const useGetPosts = ({ postCount }: UseGetPostsI) => {
   const [refetchCount, setRefetchCount] = useState(0);
   const [refetchRemainder, setRefetchRemainder] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
+  const { user } = useUser();
 
   // possible refetches
   useEffect(() => {
@@ -35,9 +37,6 @@ export const useGetPosts = ({ postCount }: UseGetPostsI) => {
   useEffect(() => {
     const wH = document.body.clientHeight - window.innerHeight;
     setWindowHeight(wH);
-    if (scrollY < windowHeight - 200) {
-      setScrollThreshold(windowHeight - 200);
-    }
   }, [postsData, scrollY, windowHeight, postsData]);
 
   const onScroll = useCallback(() => {
@@ -56,14 +55,25 @@ export const useGetPosts = ({ postCount }: UseGetPostsI) => {
   // fetching
   useEffect(() => {
     const fetchNewPosts = (numberOfPostsToSkip: number) => {
-      handleGetPostsForInfiniteScroll({
-        postsToSkip: numberOfPostsToSkip,
-      }).then((res) => {
-        const newPosts = res.postsForInfiniteScroll;
-        // setPostsToSkip(postsToSkip + postsFetchedAtOnce);
-        setData([...data, newPosts].flat());
-      });
+      if (user) {
+        const userEmail = user.email ? user.email : '';
+        handleGetPostsForScrollWithUser({
+          postsToSkip: numberOfPostsToSkip,
+          userEmail,
+        }).then((res) => {
+          const newPosts = res;
+          setData([...data, newPosts].flat());
+        });
+      } else {
+        handleGetPostsForScroll({
+          postsToSkip: numberOfPostsToSkip,
+        }).then((res) => {
+          const newPosts = res.postsForScroll;
+          setData([...data, newPosts].flat());
+        });
+      }
     };
+
     if (
       windowHeight === scrollY &&
       !isFetched &&
@@ -89,8 +99,8 @@ export const useGetPosts = ({ postCount }: UseGetPostsI) => {
     postsToSkip,
     refetchCount,
     refetchRemainder,
-    scrollThreshold,
     scrollY,
+    user,
     windowHeight,
   ]);
 
@@ -99,7 +109,7 @@ export const useGetPosts = ({ postCount }: UseGetPostsI) => {
     if (windowHeight > scrollY && isFetched) {
       setIsFetched(false);
     }
-  }, [isFetched, scrollThreshold, scrollY, windowHeight]);
+  }, [isFetched, scrollY, windowHeight]);
 
   return { data };
 };
