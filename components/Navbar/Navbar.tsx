@@ -5,8 +5,6 @@ import { useUser } from '@auth0/nextjs-auth0/';
 import UserAvatarDropdown from './UserAvatarDropdown/UserAvatarDropdown';
 import UserAvatar from '../UserAvatar/UserAvatar';
 
-// if !user anonymous avatar else userAvatar
-
 function Navbar() {
   const { user } = useUser();
   return (
