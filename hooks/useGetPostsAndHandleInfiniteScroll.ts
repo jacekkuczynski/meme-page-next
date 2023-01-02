@@ -21,16 +21,26 @@ export const useGetPostsAndHandleInfiniteScroll = ({
   const [refetchCount, setRefetchCount] = useState(0);
   const [refetchRemainder, setRefetchRemainder] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
+  const [isMorePosts, setIsMorePosts] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useUser();
 
   // possible refetches
   useEffect(() => {
-    const maxCountRefetch = Math.ceil(postCount / postsFetchedAtOnce);
+    const maxCountRefetch = Math.ceil(postCount / postsFetchedAtOnce) - 1; //  - initial fetch
     const maxRefetchRemainder = postCount % postsFetchedAtOnce;
     setRefetchRemainder(maxRefetchRemainder);
-    // 1 - initial fetch
-    setMaxRefetchCount(maxCountRefetch - 1);
+    setMaxRefetchCount(maxCountRefetch);
   }, [postCount]);
+
+  // is more posts
+  useEffect(() => {
+    if (refetchCount === maxRefetchCount) {
+      setIsMorePosts(false);
+    } else {
+      setIsMorePosts(true);
+    }
+  }, [maxRefetchCount, refetchCount]);
 
   useEffect(() => {
     if (postsData) setData(postsData);
@@ -59,25 +69,40 @@ export const useGetPostsAndHandleInfiniteScroll = ({
     const fetchNewPosts = (numberOfPostsToSkip: number) => {
       if (user) {
         const userEmail = user.email ? user.email : '';
+        setIsLoading(true);
         handleGetPostsForScrollWithUser({
           postsToSkip: numberOfPostsToSkip,
           userEmail,
-        }).then((res) => {
-          const newPosts = res;
-          setData([...data, newPosts].flat());
-        });
+        })
+          .then((res) => {
+            const newPosts = res;
+            setData([...data, newPosts].flat());
+            setRefetchCount(refetchCount + 1);
+          })
+          .finally(() => {
+            setIsLoading(false);
+            setIsFetched(false);
+          });
       } else {
+        setIsLoading(true);
         handleGetPostsForScroll({
           postsToSkip: numberOfPostsToSkip,
-        }).then((res) => {
-          const newPosts = res.postsForScroll;
-          setData([...data, newPosts].flat());
-        });
+        })
+          .then((res) => {
+            const newPosts = res.postsForScroll;
+            setData([...data, newPosts].flat());
+            setRefetchCount(refetchCount + 1);
+          })
+          .finally(() => {
+            setIsLoading(false);
+            setIsFetched(false);
+          });
       }
     };
 
     if (
-      windowHeight === scrollY &&
+      scrollY >= windowHeight - 10 &&
+      windowHeight > 0 &&
       !isFetched &&
       refetchCount < maxRefetchCount
     ) {
@@ -91,8 +116,6 @@ export const useGetPostsAndHandleInfiniteScroll = ({
         setPostsToSkip(postsToSkip + postsFetchedAtOnce);
         fetchNewPosts(postsToSkip);
       }
-
-      setRefetchCount(refetchCount + 1);
     }
   }, [
     data,
@@ -106,12 +129,5 @@ export const useGetPostsAndHandleInfiniteScroll = ({
     windowHeight,
   ]);
 
-  // set if you can fetch again
-  useEffect(() => {
-    if (windowHeight > scrollY && isFetched) {
-      setIsFetched(false);
-    }
-  }, [isFetched, scrollY, windowHeight]);
-
-  return { data };
+  return { data, isMorePosts, isLoading };
 };

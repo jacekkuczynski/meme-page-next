@@ -13,8 +13,9 @@ interface HomeI {
 }
 
 export default function Home({ postCount }: HomeI) {
-  // const postsData = useGetPostsWithOrWOUser();
-  const { data } = useGetPostsAndHandleInfiniteScroll({ postCount });
+  const { data, isMorePosts, isLoading } = useGetPostsAndHandleInfiniteScroll({
+    postCount,
+  });
 
   return (
     <>
@@ -48,6 +49,9 @@ export default function Home({ postCount }: HomeI) {
           ) : (
             <LoadingSpinner />
           )}
+          {!isMorePosts && <div className="py-4">No more posts</div>}
+          {isLoading && <div className="py-4">Loading...</div>}
+          {isMorePosts && !isLoading && <div className="py-4"> </div>}
         </div>
       </main>
     </>
@@ -57,6 +61,6 @@ export default function Home({ postCount }: HomeI) {
 export async function getServerSideProps() {
   const postCount = await prisma.post.count();
   return {
-    props: { postCount }, // will be passed to the page component as props
+    props: { postCount },
   };
 }
