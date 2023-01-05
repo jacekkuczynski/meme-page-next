@@ -1,7 +1,6 @@
 import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
 import React, { useEffect, useRef, useState } from 'react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { v4 as uuidv4 } from 'uuid';
 import { storage } from '../../firebase/initializeFirebase';
 import { handleUploadMemeDataToDb } from '../../utils/handleUploadMeme';
 
@@ -29,7 +28,7 @@ function UploadMemeForm({ userNickname }: UploadMemeFormProps) {
     }
   }, [postTitle, fileInput]);
 
-  const getUuid = () => uuidv4();
+  const getUuid = () => crypto.randomUUID();
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPostTitle(event.target.value);

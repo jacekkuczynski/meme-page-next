@@ -76,12 +76,14 @@ export const useGetPostsAndHandleInfiniteScroll = ({
         })
           .then((res) => {
             const newPosts = res;
-            setData([...data, newPosts].flat());
+            setData([...data, ...newPosts]);
             setRefetchCount(refetchCount + 1);
           })
           .finally(() => {
-            setIsLoading(false);
-            setIsFetched(false);
+            setTimeout(() => {
+              setIsLoading(false);
+              setIsFetched(false);
+            }, 1000);
           });
       } else {
         setIsLoading(true);
@@ -90,12 +92,14 @@ export const useGetPostsAndHandleInfiniteScroll = ({
         })
           .then((res) => {
             const newPosts = res.postsForScroll;
-            setData([...data, newPosts].flat());
+            setData([...data, ...newPosts]);
             setRefetchCount(refetchCount + 1);
           })
           .finally(() => {
-            setIsLoading(false);
-            setIsFetched(false);
+            setTimeout(() => {
+              setIsLoading(false);
+              setIsFetched(false);
+            }, 1000);
           });
       }
     };
