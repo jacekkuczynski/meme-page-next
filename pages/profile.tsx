@@ -1,11 +1,12 @@
 import React from 'react';
 import Navbar from '../components/Navbar/Navbar';
+import Profile from '../components/Profile/Profile';
 
 const profile = () => (
-  <div>
+  <>
     <Navbar />
-    Enter
-  </div>
+    <Profile />
+  </>
 );
 
 export default profile;
